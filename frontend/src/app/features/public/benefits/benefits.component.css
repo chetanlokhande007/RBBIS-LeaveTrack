@@ -1,0 +1,117 @@
+/* Benefits Section */
+.benefits-section {
+  background: #ffffff;
+  padding: 5rem 2rem;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.benefits-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+.benefits-text {
+  flex: 1;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  color: #475569;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.benefits-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  font-size: 1rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.benefits-list strong {
+  color: #0f172a;
+}
+
+.benefits-image {
+  flex: 1;
+  position: relative;
+  height: 400px;
+  background: radial-gradient(circle at center, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+}
+
+.benefit-card-floating {
+  position: absolute;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid #f8fafc;
+}
+
+.top-right {
+  top: 20%;
+  right: 10%;
+  animation: float 6s ease-in-out infinite;
+}
+
+.bottom-left {
+  bottom: 20%;
+  left: 10%;
+  animation: float 6s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.floating-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-green { background: #ecfdf5; color: #10b981; }
+.icon-purple { background: #faf5ff; color: #a855f7; }
+
+.benefit-card-floating h4 {
+  font-size: 1rem;
+  color: #0f172a;
+  margin-bottom: 0.25rem;
+}
+
+.benefit-card-floating p {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+}

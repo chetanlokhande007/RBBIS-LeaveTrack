@@ -1,0 +1,68 @@
+/* How It Works Section */
+.how-it-works-section {
+  padding: 4rem 2rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-header {
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  color: #475569;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.step-box {
+  background: white;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+  flex: 1;
+  max-width: 320px;
+  text-align: center;
+  position: relative;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: #2563eb;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  box-shadow: 0 0 0 4px #eff6ff;
+}
+
+.step-box h3 {
+  font-size: 1.125rem;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.step-box p {
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.6;
+}
