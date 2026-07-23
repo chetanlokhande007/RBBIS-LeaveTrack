@@ -1,0 +1,162 @@
+<div class="screen">
+  <div class="page-head">
+    <div class="page-head-row">
+      <div>
+        <h2 style="font-size:24px; font-weight:700;">Employees Directory</h2>
+        <p>Manage employee records, department allocations, designations, and system accounts.</p>
+      </div>
+      <div>
+        <button class="btn btn-primary" (click)="openAddModal()">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Add Employee
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <!-- Toolbar -->
+    <div class="table-toolbar">
+      <div class="search-box">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" placeholder="Search by name, dept..." [(ngModel)]="searchQuery" (ngModelChange)="applyFilters()">
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="filteredEmployees.length === 0" style="padding:32px; text-align:center; color:var(--slate);">
+      No matching employees found.
+    </div>
+
+    <table *ngIf="filteredEmployees.length > 0">
+      <thead>
+        <tr>
+          <th>Name / Designation</th>
+          <th>Email Address</th>
+          <th>Department</th>
+          <th>Joining Date</th>
+          <th>Manager</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emp of filteredEmployees">
+          <td>
+            <div class="cell-user">
+              <div class="avatar sm">{{ emp.fullName.substring(0,2).toUpperCase() }}</div>
+              <div>
+                <div class="nm">{{ emp.fullName }}</div>
+                <div class="sm-sub">{{ emp.designation }}</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--slate);">{{ emp.email }}</td>
+          <td>{{ emp.department }}</td>
+          <td style="font-family:var(--font-mono); font-size:12.5px;">{{ emp.dateOfJoining }}</td>
+          <td style="color:var(--slate);">{{ emp.managerName || '—' }}</td>
+          <td>
+            <div class="row-actions">
+              <button class="act-btn" (click)="openEditModal(emp)" title="Edit Employee">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                Edit
+              </button>
+              <button class="act-btn reject" (click)="deleteEmployee(emp.id)" title="Remove Employee">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Employee Modal Dialog -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3 style="font-size:16px; font-weight:700;">{{ isEdit ? 'Edit Employee Details' : 'Register New Employee' }}</h3>
+        <button class="close-x" (click)="closeModal()">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="employeeForm">
+          
+          <!-- AUTH CREDENTIALS SECTION (Add mode only) -->
+          <div *ngIf="!isEdit" style="background:var(--canvas); border-radius:var(--radius); padding:14px; margin-bottom:18px; border:1px solid var(--line);">
+            <h4 style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--slate); margin-bottom:10px;">User Authentication Details</h4>
+            
+            <div class="form-row">
+              <div class="field">
+                <label>Username</label>
+                <input type="text" formControlName="username" placeholder="e.g. jdoe" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
+              </div>
+              <div class="field">
+                <label>Password</label>
+                <input type="password" formControlName="password" placeholder="Temporary password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');">
+              </div>
+            </div>
+
+            <div class="field" style="margin-bottom: 0;">
+              <label>System Role (Authority)</label>
+              <select formControlName="roleId" required>
+                <option value="3">Employee</option>
+                <option value="2">Manager</option>
+                <option value="4">HR</option>
+                <option value="1">Admin</option>
+              </select>
+            </div>
+          </div>
+
+          <h4 style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--slate); margin-bottom:10px;" *ngIf="!isEdit">Employee Profile Details</h4>
+
+          <div class="field">
+            <label>Full Name</label>
+            <input type="text" formControlName="fullName" placeholder="e.g. John Doe" required>
+          </div>
+          
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" formControlName="email" placeholder="e.g. jdoe@rbis.com" required>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label>Department</label>
+              <input type="text" formControlName="department" placeholder="e.g. Engineering" required>
+            </div>
+            <div class="field">
+              <label>Designation</label>
+              <input type="text" formControlName="designation" placeholder="e.g. Software Engineer" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label>Manager</label>
+              <select formControlName="managerId">
+                <option value="">No Manager (Reporting head)</option>
+                <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.fullName }}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Joining Date</label>
+              <input type="date" formControlName="dateOfJoining" required>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" (click)="closeModal()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="employeeForm.invalid || submitting" (click)="saveEmployee()">
+          <span *ngIf="!submitting">Save Profile</span>
+          <span *ngIf="submitting">Saving...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

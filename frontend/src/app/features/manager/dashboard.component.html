@@ -1,0 +1,77 @@
+<div class="screen">
+  <div class="page-head">
+    <h2 style="font-size:24px; font-weight:700;">Manager Dashboard</h2>
+    <p>Monitor your direct reports' attendance punches and leave requests.</p>
+  </div>
+
+  <!-- KPI Grid -->
+  <div class="grid grid-4" style="margin-bottom:28px;">
+    <!-- Card 1 -->
+    <div class="card stat-card">
+      <div class="top-row">
+        <div class="ic-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+      </div>
+      <div class="label">Total Team Size</div>
+      <div class="value">{{ teamSize }}</div>
+      <div class="sub">Direct reports in your dept.</div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card stat-card">
+      <div class="top-row">
+        <div class="ic-wrap" style="background:var(--green-bg); color:var(--green);">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+      </div>
+      <div class="label">Present Today</div>
+      <div class="value">{{ presentToday }}</div>
+      <div class="sub">Active check-ins logged</div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card stat-card">
+      <div class="top-row">
+        <div class="ic-wrap" style="background:var(--blue-bg); color:var(--blue);">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </div>
+      </div>
+      <div class="label">On Leave Today</div>
+      <div class="value">{{ onLeaveToday }}</div>
+      <div class="sub">Approved schedule absences</div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="card stat-card" routerLink="/manager/approvals" style="cursor:pointer;">
+      <div class="top-row">
+        <div class="ic-wrap" style="background:var(--amber-bg); color:var(--amber);">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+      </div>
+      <div class="label">Pending Approvals</div>
+      <div class="value" id="mgr-pending-count">{{ pendingApprovals }}</div>
+      <div class="sub warn" *ngIf="pendingApprovals > 0">Needs immediate action</div>
+      <div class="sub" *ngIf="pendingApprovals === 0">No requests pending</div>
+    </div>
+  </div>
+
+  <!-- Team Strip Section -->
+  <div class="section-title-row">
+    <h3>Team Presence Strip</h3>
+  </div>
+
+  <div class="card" style="margin-bottom:28px;">
+    <div *ngIf="teamList.length === 0" style="color:var(--slate); text-align:center; padding:12px;">
+      No direct reports registered.
+    </div>
+    
+    <div class="team-strip" *ngIf="teamList.length > 0">
+      <div class="team-chip" *ngFor="let emp of teamList">
+        <!-- Avatar Ring maps to status: present -> green, absent -> red, leave -> blue -->
+        <div [className]="'ring ' + emp.status">{{ emp.initials }}</div>
+        <div class="nm">{{ emp.fullName }}</div>
+      </div>
+    </div>
+  </div>
+</div>

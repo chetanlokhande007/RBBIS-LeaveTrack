@@ -1,0 +1,109 @@
+<div class="screen">
+  <div class="page-head">
+    <h2 style="font-size:24px; font-weight:700;">Reports &amp; Analytics</h2>
+    <p>Consolidated view of employee leave balances and attendance performance records.</p>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="card filter-bar" style="margin-bottom:24px;">
+    <div class="filter-field">
+      <label>Report Category</label>
+      <select [(ngModel)]="reportType" (ngModelChange)="applyFilters()">
+        <option value="leave">Leave Balances</option>
+        <option value="attendance">Attendance Summary</option>
+      </select>
+    </div>
+    
+    <div class="filter-field" *ngIf="reportType === 'attendance'">
+      <label>Start Date</label>
+      <input type="date" [(ngModel)]="startDate">
+    </div>
+    
+    <div class="filter-field" *ngIf="reportType === 'attendance'">
+      <label>End Date</label>
+      <input type="date" [(ngModel)]="endDate">
+    </div>
+
+    <div class="filter-field">
+      <label>Department</label>
+      <select [(ngModel)]="department" (ngModelChange)="applyFilters()">
+        <option value="">All Departments</option>
+        <option value="Engineering">Engineering</option>
+        <option value="Human Resources">Human Resources</option>
+      </select>
+    </div>
+
+    <button type="button" class="btn btn-primary" (click)="onFilterSubmit()" *ngIf="reportType === 'attendance'">
+      Query Report
+    </button>
+  </div>
+
+  <!-- LEAVE REPORT TABLE -->
+  <div class="table-wrap" *ngIf="reportType === 'leave'">
+    <div *ngIf="filteredLeaveData.length === 0" style="padding:32px; text-align:center; color:var(--slate);">
+      No leave records found.
+    </div>
+
+    <table *ngIf="filteredLeaveData.length > 0">
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Leave Type</th>
+          <th>Annual Quota</th>
+          <th>Days Taken</th>
+          <th>Remaining Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let emp of filteredLeaveData">
+          <tr *ngFor="let sum of emp.leaveSummaries; let first = first">
+            <td *ngIf="first" [attr.rowspan]="emp.leaveSummaries.length" style="font-weight:600; vertical-align:top; border-right: 1px solid var(--line-soft);">
+              {{ emp.fullName }}
+            </td>
+            <td>{{ sum.leaveTypeName }}</td>
+            <td style="font-family:var(--font-mono);">{{ sum.totalQuota }} days</td>
+            <td style="font-family:var(--font-mono); color:var(--amber); font-weight:600;">{{ sum.usedDays }} days</td>
+            <td style="font-family:var(--font-mono); color:var(--green); font-weight:700;">{{ sum.remainingDays }} days</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ATTENDANCE REPORT TABLE -->
+  <div class="table-wrap" *ngIf="reportType === 'attendance'">
+    <div *ngIf="filteredAttendanceData.length === 0" style="padding:32px; text-align:center; color:var(--slate);">
+      No attendance summary logs found.
+    </div>
+
+    <table *ngIf="filteredAttendanceData.length > 0">
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Department</th>
+          <th>Present Days</th>
+          <th>Absent Days</th>
+          <th>Leave Days</th>
+          <th>Attendance Rate (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let att of filteredAttendanceData">
+          <td style="font-weight:600;">
+            <div>{{ att.fullName }}</div>
+            <div style="font-size:11px; color:var(--slate); font-weight:normal;">{{ att.designation }}</div>
+          </td>
+          <td>{{ att.department }}</td>
+          <td style="font-family:var(--font-mono); font-weight:600; color:var(--green);">{{ att.presentDays }}</td>
+          <td style="font-family:var(--font-mono); font-weight:600; color:var(--red);">{{ att.absentDays }}</td>
+          <td style="font-family:var(--font-mono); color:var(--blue);">{{ att.leaveDays }}</td>
+          <td style="font-family:var(--font-mono); font-weight:700;">
+            <span [className]="att.attendanceRate >= 80 ? 'badge badge-present' : 'badge badge-pending'">
+              {{ att.attendanceRate }}%
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

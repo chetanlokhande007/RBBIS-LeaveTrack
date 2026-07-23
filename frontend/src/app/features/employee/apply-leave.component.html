@@ -1,0 +1,56 @@
+<div class="screen">
+  <div class="page-head">
+    <h2 style="font-size:24px; font-weight:700;">Apply Leave</h2>
+    <p>Submit a new leave application. Your manager will be notified to review and action your request.</p>
+  </div>
+
+  <div class="card form-card">
+    <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
+
+      <!-- Balance Hint alert box -->
+      <div class="balance-hint">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        <span>Your current remaining balance for this type is: <strong id="balance-hint-text">{{ selectedBalanceHint
+            }}</strong></span>
+      </div>
+
+      <div class="field">
+        <label>Leave Type</label>
+        <select formControlName="leaveTypeId" required>
+          <option value="" disabled selected>Select leave category</option>
+          <option *ngFor="let t of leaveTypes" [value]="t.id">{{ t.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Start Date</label>
+          <input type="date" formControlName="startDate" required>
+        </div>
+        <div class="field">
+          <label>End Date</label>
+          <input type="date" formControlName="endDate" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Reason / Comments</label>
+        <textarea formControlName="reason" placeholder="Please provide details about your leave request..."
+          maxlength="500" required></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="leaveForm.invalid || submitting">
+          <span *ngIf="!submitting">Submit Application</span>
+          <span *ngIf="submitting">Submitting...</span>
+        </button>
+        <button type="button" class="btn btn-ghost" routerLink="/employee/dashboard">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

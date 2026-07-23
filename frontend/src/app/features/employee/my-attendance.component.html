@@ -1,0 +1,60 @@
+<div class="screen">
+  <div class="page-head">
+    <h2 style="font-size:24px; font-weight:700;">Attendance History</h2>
+    <p>View your monthly check-in details, shift timings, and absent logs.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <!-- Calendar Header -->
+    <div class="cal-head">
+      <h3 style="font-size:16px; font-weight:700;">{{ currentMonthName }}</h3>
+      <div class="cal-nav">
+        <button class="btn-icon" style="padding:4px 8px;">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="btn-icon" style="padding:4px 8px;">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="cal-grid">
+      <!-- Days of Week -->
+      <div class="cal-dow" *ngFor="let dow of daysOfWeek">{{ dow }}</div>
+
+      <!-- Days Cells -->
+      <ng-container *ngFor="let cell of calendarCells">
+        <!-- Empty Cell -->
+        <div class="cal-cell empty" *ngIf="cell.isEmpty"></div>
+        
+        <!-- Day Cell -->
+        <div [className]="cell.isToday ? 'cal-cell today' : 'cal-cell'" *ngIf="!cell.isEmpty">
+          <div class="d-num">{{ cell.dayNumber }}</div>
+          <span [className]="cell.badgeClass">{{ cell.badgeText }}</span>
+          <div class="mini-time" *ngIf="cell.timeRange">{{ cell.timeRange }}</div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Calendar Legend -->
+    <div class="legend-row">
+      <div class="legend-item">
+        <span class="badge badge-present" style="padding: 2px 4px; font-size: 10px;">&nbsp;</span>
+        <span>Present</span>
+      </div>
+      <div class="legend-item">
+        <span class="badge badge-absent" style="padding: 2px 4px; font-size: 10px;">&nbsp;</span>
+        <span>Absent</span>
+      </div>
+      <div class="legend-item">
+        <span class="badge badge-leave" style="padding: 2px 4px; font-size: 10px;">&nbsp;</span>
+        <span>Approved Leave</span>
+      </div>
+      <div class="legend-item">
+        <span class="badge badge-weekend" style="padding: 2px 4px; font-size: 10px;">&nbsp;</span>
+        <span>Weekend / Holiday</span>
+      </div>
+    </div>
+  </div>
+</div>
