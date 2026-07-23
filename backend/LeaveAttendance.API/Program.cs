@@ -22,6 +22,12 @@ builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IRoleRepo
 builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IRoleService, LeaveAttendance.API.Services.RoleService>();
 builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IAttendanceRepository, LeaveAttendance.API.Repositories.AttendanceRepository>();
 builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IAttendanceService, LeaveAttendance.API.Services.AttendanceService>();
+builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.ILeaveTypeRepository, LeaveAttendance.API.Repositories.LeaveTypeRepository>();
+builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.ILeaveTypeService, LeaveAttendance.API.Services.LeaveTypeService>();
+builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.ILeaveRequestRepository, LeaveAttendance.API.Repositories.LeaveRequestRepository>();
+builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.ILeaveRequestService, LeaveAttendance.API.Services.LeaveRequestService>();
+builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IHolidayRepository, LeaveAttendance.API.Repositories.HolidayRepository>();
+builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IHolidayService, LeaveAttendance.API.Services.HolidayService>();
 
 // Configure Swagger/OpenAPI with JWT Auth Support
 builder.Services.AddEndpointsApiExplorer();
