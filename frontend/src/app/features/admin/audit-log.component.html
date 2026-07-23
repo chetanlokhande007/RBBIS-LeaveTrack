@@ -1,0 +1,32 @@
+<div class="screen">
+  <div class="page-head">
+    <h2 style="font-size:24px; font-weight:700;">Audit Trail</h2>
+    <p>Read-only trail of administrative activities, leave actions, and registration logs.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>User</th>
+          <th>Action</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of logs">
+          <td style="font-family:var(--font-mono); font-size:12.5px; color:var(--slate);">{{ log.timestamp }}</td>
+          <td style="font-weight:600; color:var(--ink-soft);">{{ log.user }}</td>
+          <td>
+            <!-- Visual status colors for different actions -->
+            <span [className]="log.action === 'User Login' ? 'badge badge-leave' : (log.action === 'Leave Decision' ? 'badge badge-approved' : 'badge badge-weekend')">
+              {{ log.action }}
+            </span>
+          </td>
+          <td style="color:var(--slate);">{{ log.details }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,153 @@
+<div class="screen">
+  <div class="page-head">
+    <div class="page-head-row">
+      <div>
+        <h2 style="font-size:24px; font-weight:700;">Configuration Rules</h2>
+        <p>Define corporate leave balance quotas and register public holidays.</p>
+      </div>
+      <div>
+        <!-- Add actions depending on active tab -->
+        <button class="btn btn-primary" *ngIf="activeTab === 'types'" (click)="openAddType()">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Add Leave Type
+        </button>
+        <button class="btn btn-primary" *ngIf="activeTab === 'holidays'" (click)="openAddHoliday()">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Add Holiday
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab row -->
+  <div class="tab-row" style="margin-bottom:20px;">
+    <button [className]="activeTab === 'types' ? 'tab-btn active' : 'tab-btn'" (click)="setTab('types')">Leave Categories</button>
+    <button [className]="activeTab === 'holidays' ? 'tab-btn active' : 'tab-btn'" (click)="setTab('holidays')">Company Holidays</button>
+  </div>
+
+  <!-- LEAVE TYPES TAB PANEL -->
+  <div class="table-wrap" *ngIf="activeTab === 'types'">
+    <div *ngIf="leaveTypes.length === 0" style="padding:32px; text-align:center; color:var(--slate);">
+      No leave categories registered.
+    </div>
+
+    <table *ngIf="leaveTypes.length > 0">
+      <thead>
+        <tr>
+          <th>Leave Type</th>
+          <th>Annual Quota (Days)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of leaveTypes">
+          <td style="font-weight:600;">{{ t.name }}</td>
+          <td style="font-family:var(--font-mono); font-weight:600;">{{ t.defaultDaysPerYear }} days</td>
+          <td>
+            <div class="row-actions">
+              <button class="act-btn" (click)="openEditType(t)">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                Edit
+              </button>
+              <button class="act-btn reject" (click)="deleteType(t.id)">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HOLIDAYS TAB PANEL -->
+  <div class="table-wrap" *ngIf="activeTab === 'holidays'">
+    <div *ngIf="holidays.length === 0" style="padding:32px; text-align:center; color:var(--slate);">
+      No holidays registered yet.
+    </div>
+
+    <table *ngIf="holidays.length > 0">
+      <thead>
+        <tr>
+          <th>Holiday Event</th>
+          <th>Calendar Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let h of holidays">
+          <td style="font-weight:600;">{{ h.name }}</td>
+          <td style="font-family:var(--font-mono); font-weight:600;">{{ h.date }}</td>
+          <td>
+            <div class="row-actions">
+              <button class="act-btn" (click)="openEditHoliday(h)">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                Edit
+              </button>
+              <button class="act-btn reject" (click)="deleteHoliday(h.id)">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Leave Type Modal -->
+  <div class="modal-overlay" *ngIf="showTypeModal" (click)="showTypeModal = false">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3 style="font-size:16px; font-weight:700;">{{ isTypeEdit ? 'Modify Leave Category' : 'Create Leave Category' }}</h3>
+        <button class="close-x" (click)="showTypeModal = false">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="typeForm">
+          <div class="field">
+            <label>Category Title</label>
+            <input type="text" formControlName="name" placeholder="e.g. Maternity Leave" required>
+          </div>
+          <div class="field">
+            <label>Default Allocated Quota (Days / Year)</label>
+            <input type="number" formControlName="defaultDaysPerYear" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" (click)="showTypeModal = false">Cancel</button>
+        <button class="btn btn-primary" [disabled]="typeForm.invalid || submittingType" (click)="saveType()">Save Category</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Holiday Modal -->
+  <div class="modal-overlay" *ngIf="showHolidayModal" (click)="showHolidayModal = false">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3 style="font-size:16px; font-weight:700;">{{ isHolidayEdit ? 'Modify Holiday Event' : 'Register Holiday Event' }}</h3>
+        <button class="close-x" (click)="showHolidayModal = false">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="holidayForm">
+          <div class="field">
+            <label>Holiday Title</label>
+            <input type="text" formControlName="name" placeholder="e.g. Diwali" required>
+          </div>
+          <div class="field">
+            <label>Calendar Date</label>
+            <input type="date" formControlName="date" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" (click)="showHolidayModal = false">Cancel</button>
+        <button class="btn btn-primary" [disabled]="holidayForm.invalid || submittingHoliday" (click)="saveHoliday()">Save Event</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,112 @@
+<div class="screen">
+  <div class="page-head">
+    <div class="page-head-row">
+      <div>
+        <h2 style="font-size:24px; font-weight:700;">Dashboard</h2>
+        <p>Overview of your attendance punch log, leave accounts, and active requests.</p>
+      </div>
+      <div>
+        <button class="btn btn-primary" routerLink="/employee/apply">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Apply Leave
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Check-in Ticket Card -->
+  <div class="ticket-card" style="margin-bottom:24px;">
+    <div class="ticket-left">
+      <div class="eyebrow">Work Shift punch clock</div>
+      <div class="ticket-time" id="clock-display">{{ clockTime }}</div>
+      <div class="ticket-status-line">
+        <div [className]="checkedIn ? 'status-dot on' : 'status-dot off'" id="status-dot"></div>
+        <span id="status-text">{{ statusText }}</span>
+      </div>
+    </div>
+    
+    <button [className]="checkedIn ? 'ticket-btn out' : 'ticket-btn in'" id="checkin-btn" (click)="toggleCheckIn()">
+      <!-- Show check in or check out SVG depending on status -->
+      <ng-container *ngIf="!checkedIn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Check In
+      </ng-container>
+      <ng-container *ngIf="checkedIn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        Check Out
+      </ng-container>
+    </button>
+  </div>
+
+  <!-- KPI Grid -->
+  <div class="grid grid-4" style="margin-bottom:28px;">
+    <!-- Loop through leave balances -->
+    <div class="card stat-card" *ngFor="let balance of leaveBalances">
+      <div class="top-row">
+        <div class="ic-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L11 22l-9-9L11 3h9v9z"/><circle cx="16.5" cy="7.5" r="1.5"/></svg>
+        </div>
+      </div>
+      <div class="label">{{ balance.leaveTypeName }}</div>
+      <div class="value">{{ balance.remainingDays }}</div>
+      <div class="sub">Days Remaining (out of {{ balance.totalQuota }})</div>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="(balance.remainingDays / balance.totalQuota) * 100"></div>
+      </div>
+    </div>
+
+    <!-- Attendance Rate Card -->
+    <div class="card stat-card">
+      <div class="top-row">
+        <div class="ic-wrap" style="background:var(--blue-bg); color:var(--blue);">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+      </div>
+      <div class="label">Attendance Rate</div>
+      <div class="value">{{ attendanceSummary?.attendanceRate || 100 }}%</div>
+      <div class="sub">Month-to-date average</div>
+      <div class="progress-track">
+        <div class="progress-fill" style="background:var(--blue);" [style.width.%]="attendanceSummary?.attendanceRate || 100"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Leave Requests -->
+  <div class="section-title-row">
+    <h3>Recent Leave Requests</h3>
+    <button class="link-btn" routerLink="/employee/requests">View All</button>
+  </div>
+
+  <div class="table-wrap">
+    <div *ngIf="recentRequests.length === 0" style="padding: 24px; text-align: center; color: var(--slate);">
+      No leave requests submitted yet. Click "Apply Leave" to submit your first request.
+    </div>
+    
+    <table *ngIf="recentRequests.length > 0">
+      <thead>
+        <tr>
+          <th>Leave Type</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Approved By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of recentRequests">
+          <td style="font-weight:600;">{{ req.leaveTypeName }}</td>
+          <td>{{ req.startDate }}</td>
+          <td>{{ req.endDate }}</td>
+          <td class="reason-cell" [title]="req.reason">{{ req.reason }}</td>
+          <td>
+            <span [className]="getStatusBadgeClass(req.status)">
+              {{ getStatusText(req.status) }}
+            </span>
+          </td>
+          <td style="color:var(--slate);">{{ req.approvedByName || '—' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

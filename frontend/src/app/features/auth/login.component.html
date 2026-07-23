@@ -1,0 +1,103 @@
+<div class="v2-login-container" style="display: flex; min-height: 100vh; background: #12151c;">
+  
+  <!-- Left Column (Gradient & Hero) -->
+  <div class="v2-login-left" style="flex: 1; background: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 50%, #10b981 100%); padding: 60px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+    
+    <!-- Decorative Circles -->
+    <div style="position: absolute; bottom: -100px; right: -100px; width: 400px; height: 400px; border-radius: 50%; background: rgba(255,255,255,0.1);"></div>
+    <div style="position: absolute; top: 20%; left: -50px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.05);"></div>
+
+    <div style="position: relative; z-index: 1;">
+      <!-- Brand -->
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 80px;">
+        <div style="background: white; padding: 6px; border-radius: 6px; display: flex;">
+          <img src="rbislogo.png" alt="RBIS" style="height: 24px;">
+        </div>
+        <span style="color: white; font-weight: 700; font-size: 20px;">RBIS Technology</span>
+      </div>
+
+      <!-- Hero Text -->
+      <div style="color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px;">HR Portal</div>
+      <h1 style="color: white; font-size: 42px; font-weight: 700; line-height: 1.2; margin: 0 0 24px 0; max-width: 400px;">Leave & Attendance Portal</h1>
+      <p style="color: rgba(255,255,255,0.9); font-size: 15px; line-height: 1.5; max-width: 400px; margin: 0 0 40px 0;">
+        Manage your leave requests, check in your daily attendance, and keep track of your team schedule inside RBIS Technology.
+      </p>
+
+      <!-- Glass Clock -->
+      <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 24px; max-width: 320px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <div style="color: white; font-size: 28px; font-weight: 700; line-height: 1;">{{ clockTime }}</div>
+          <div style="color: rgba(255,255,255,0.8); font-size: 12px; margin-top: 6px;">Pune Local Time</div>
+        </div>
+        <svg style="color: rgba(255,255,255,0.6); width: 32px; height: 32px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="color: rgba(255,255,255,0.7); font-size: 12px; position: relative; z-index: 1;">
+      © RBIS Technology Private Limited
+    </div>
+  </div>
+
+  <!-- Right Column (Form) -->
+  <div class="v2-login-right" style="flex: 1; display: flex; align-items: center; justify-content: center; background: #12151c;">
+    <div style="width: 100%; max-width: 400px; padding: 40px;">
+      
+      <h2 style="color: white; font-size: 28px; font-weight: 700; margin: 0 0 8px 0;">Welcome Back</h2>
+      <p style="color: #94a3b8; font-size: 14px; margin: 0 0 32px 0;">Log in to manage your HR profile.</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; color: white; font-size: 13px; font-weight: 500; margin-bottom: 8px;">Username</label>
+          <input type="text" formControlName="username" placeholder="employee1" style="width: 100%; background: #1e2330; border: 1px solid #2b3243; color: white; padding: 12px 16px; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s;">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label style="color: white; font-size: 13px; font-weight: 500;">Password</label>
+            <a routerLink="/forgot-password" style="color: #6366f1; font-size: 12px; text-decoration: none; font-weight: 500;">Forgot Password?</a>
+          </div>
+          <input type="password" formControlName="password" placeholder="••••••••" style="width: 100%; background: #1e2330; border: 1px solid #2b3243; color: white; padding: 12px 16px; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s;">
+        </div>
+
+        <button type="submit" [disabled]="loading" style="width: 100%; background: #00d284; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;">
+          <span *ngIf="!loading">Log In</span>
+          <span *ngIf="loading">Logging in...</span>
+          <svg *ngIf="!loading" style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+
+      </form>
+
+      <!-- Demo Accounts -->
+      <div style="margin-top: 40px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+          <div style="flex: 1; height: 1px; background: #2b3243;"></div>
+          <div style="color: #64748b; font-size: 12px; text-transform: uppercase; font-weight: 500;">Or Demo Accounts</div>
+          <div style="flex: 1; height: 1px; background: #2b3243;"></div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+          <button (click)="demoLogin('employee')" style="background: white; border: none; padding: 12px 8px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s;">
+            <svg style="color: #6366f1; width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span style="color: #94a3b8; font-size: 12px; font-weight: 500;">Employee</span>
+          </button>
+          
+          <button (click)="demoLogin('manager')" style="background: white; border: none; padding: 12px 8px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s;">
+            <svg style="color: #3b82f6; width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="10" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span style="color: #94a3b8; font-size: 12px; font-weight: 500;">Manager</span>
+          </button>
+
+          <button (click)="demoLogin('admin')" style="background: white; border: none; padding: 12px 8px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s;">
+            <svg style="color: #8b5cf6; width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span style="color: #94a3b8; font-size: 12px; font-weight: 500;">Admin</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Container for Toast Notifications -->
+<div id="toast-container"></div>

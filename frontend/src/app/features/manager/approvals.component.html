@@ -1,0 +1,54 @@
+<div class="screen">
+  <div class="page-head">
+    <h2 style="font-size:24px; font-weight:700;">Approvals Inbox</h2>
+    <p>Review leave applications from your direct reports. Approved requests will deduct from their balances.</p>
+  </div>
+
+  <div class="table-wrap">
+    <div *ngIf="pendingRequests.length === 0 && !loading" style="padding: 32px; text-align: center; color: var(--slate);">
+      No pending leave applications to review.
+    </div>
+
+    <div *ngIf="loading" style="padding: 32px; text-align: center; color: var(--slate);">
+      Loading requests...
+    </div>
+
+    <table *ngIf="pendingRequests.length > 0 && !loading">
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Leave Type</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Days</th>
+          <th>Reason</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of pendingRequests">
+          <td style="font-weight:600;">{{ req.employeeName }}</td>
+          <td>{{ req.leaveTypeName }}</td>
+          <td>{{ req.startDate }}</td>
+          <td>{{ req.endDate }}</td>
+          <td style="font-family:var(--font-mono); font-weight:600;">
+            {{ calculateDays(req.startDate, req.endDate) }}
+          </td>
+          <td class="reason-cell" [title]="req.reason">{{ req.reason }}</td>
+          <td>
+            <div class="row-actions">
+              <button class="act-btn approve" (click)="decideRequest(req.id, true)" title="Approve Request">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Approve
+              </button>
+              <button class="act-btn reject" (click)="decideRequest(req.id, false)" title="Reject Request">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                Reject
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

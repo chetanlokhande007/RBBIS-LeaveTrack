@@ -1,0 +1,62 @@
+<div class="screen">
+  <div class="page-head">
+    <h2 style="font-size:24px; font-weight:700;">My Requests</h2>
+    <p>Track the progress and decision log of your submitted leave applications.</p>
+  </div>
+
+  <div class="table-wrap">
+    <!-- Toolbar -->
+    <div class="table-toolbar">
+      <div class="search-box">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" placeholder="Search requests..." [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()">
+      </div>
+      
+      <div class="tab-row">
+        <button [className]="currentFilter === 'all' ? 'tab-btn active' : 'tab-btn'" (click)="setFilter('all')">All</button>
+        <button [className]="currentFilter === 'pending' ? 'tab-btn active' : 'tab-btn'" (click)="setFilter('pending')">Pending</button>
+        <button [className]="currentFilter === 'approved' ? 'tab-btn active' : 'tab-btn'" (click)="setFilter('approved')">Approved</button>
+        <button [className]="currentFilter === 'rejected' ? 'tab-btn active' : 'tab-btn'" (click)="setFilter('rejected')">Rejected</button>
+      </div>
+    </div>
+
+    <!-- Requests Table -->
+    <div *ngIf="filteredRequests.length === 0" style="padding:32px; text-align:center; color:var(--slate);">
+      No matching leave requests found.
+    </div>
+
+    <table *ngIf="filteredRequests.length > 0">
+      <thead>
+        <tr>
+          <th>Leave Type</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Approved By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of filteredRequests">
+          <td style="font-weight:600;">{{ req.leaveTypeName }}</td>
+          <td>{{ req.startDate }}</td>
+          <td>{{ req.endDate }}</td>
+          <td class="reason-cell" [title]="req.reason">{{ req.reason }}</td>
+          <td>
+            <span [className]="getStatusBadgeClass(req.status)">
+              {{ getStatusText(req.status) }}
+            </span>
+          </td>
+          <td style="color:var(--slate);">{{ req.approvedByName || '—' }}</td>
+          <td>
+            <button class="btn btn-ghost btn-sm" *ngIf="req.status === 0" (click)="cancelRequest(req.id)">
+              Cancel
+            </button>
+            <span *ngIf="req.status !== 0" style="color:var(--slate-light); font-size:12px;">—</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

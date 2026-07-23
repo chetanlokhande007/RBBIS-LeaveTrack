@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "mc8fvbSxABQ=",
+  "success": true,
+  "projectFilePath": "D:\\RBBIS OFFICE\\Internship Project\\Project\\LeaveTrack\\backend\\TestApp\\TestApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\CHETAN LOKHANDE\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.0\\microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512",
+    "C:\\Users\\CHETAN LOKHANDE\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\10.0.0\\microsoft.extensions.logging.abstractions.10.0.0.nupkg.sha512",
+    "C:\\Users\\CHETAN LOKHANDE\\.nuget\\packages\\npgsql\\10.0.3\\npgsql.10.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
