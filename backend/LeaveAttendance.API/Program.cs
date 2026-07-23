@@ -10,8 +10,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Register JWT service
+// Register Services and Repositories
 builder.Services.AddScoped<LeaveAttendance.API.Services.IJwtService, LeaveAttendance.API.Services.JwtService>();
+builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IAuthRepository, LeaveAttendance.API.Repositories.AuthRepository>();
+builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IAuthService, LeaveAttendance.API.Services.AuthService>();
+builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IUserRepository, LeaveAttendance.API.Repositories.UserRepository>();
+builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IUserService, LeaveAttendance.API.Services.UserService>();
+builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IEmployeeRepository, LeaveAttendance.API.Repositories.EmployeeRepository>();
+builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IEmployeeService, LeaveAttendance.API.Services.EmployeeService>();
+builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IRoleRepository, LeaveAttendance.API.Repositories.RoleRepository>();
+builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IRoleService, LeaveAttendance.API.Services.RoleService>();
+builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IAttendanceRepository, LeaveAttendance.API.Repositories.AttendanceRepository>();
+builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IAttendanceService, LeaveAttendance.API.Services.AttendanceService>();
 
 // Configure Swagger/OpenAPI with JWT Auth Support
 builder.Services.AddEndpointsApiExplorer();
@@ -96,6 +106,8 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseMiddleware<LeaveAttendance.API.Middleware.GlobalExceptionMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
