@@ -5,6 +5,7 @@ import { TitleService } from '../../core/services/title.service';
 import { EmployeeService } from '../../core/services/employee.service';
 import { LeaveService } from '../../core/services/leave.service';
 import { AttendanceService } from '../../core/services/attendance.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -51,11 +52,13 @@ export class AdminDashboardComponent implements OnInit {
     private titleService: TitleService,
     private employeeService: EmployeeService,
     private leaveService: LeaveService,
-    private attendanceService: AttendanceService
+    private attendanceService: AttendanceService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.titleService.setTitle('Admin Dashboard');
+    const role = this.authService.userRole;
+    this.titleService.setTitle(role === 'HR' ? 'HR Dashboard' : 'Admin Dashboard');
     this.loadMetrics();
   }
 

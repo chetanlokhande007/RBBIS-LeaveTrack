@@ -42,8 +42,8 @@
     <!-- User Trigger Menu -->
     <div class="user-menu-wrap" style="margin-left: 8px;">
       <button class="user-trigger" (click)="toggleUserMenu($event)" style="background: transparent; padding: 0;">
-        <div class="avatar sm" style="background: #00d284; color: #fff; width: 32px; height: 32px; font-size: 13px;">AD</div>
-        <span style="font-weight: 500; font-size: 14px; margin: 0 8px;">Admin User</span>
+        <div class="avatar sm" style="background: var(--primary); color: #fff; width: 32px; height: 32px; font-size: 13px;">{{ userInitials }}</div>
+        <span style="font-weight: 500; font-size: 14px; margin: 0 8px;">{{ authService.currentUserValue?.fullName || 'User' }}</span>
         <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--slate);"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </button>
       

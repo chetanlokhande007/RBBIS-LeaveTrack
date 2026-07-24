@@ -32,7 +32,7 @@ namespace LeaveAttendance.API.Services
             {
                 empId = GetEmployeeId(employeeIdClaim);
             }
-            else if (userRole != "Admin")
+            else if (userRole != "Admin" && userRole != "HR")
             {
                 throw new UnauthorizedAccessException("You are not authorized.");
             }

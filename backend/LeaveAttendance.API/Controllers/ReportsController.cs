@@ -40,7 +40,7 @@ namespace LeaveAttendance.API.Controllers
             {
                 employeeQuery = employeeQuery.Where(e => e.ManagerId == mgrId || e.Id == mgrId);
             }
-            else if (userRole != "Admin")
+            else if (userRole != "Admin" && userRole != "HR")
             {
                 return Forbid();
             }
