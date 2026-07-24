@@ -24,8 +24,18 @@ namespace LeaveAttendance.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var response = await _authService.LoginAsync(request);
-            return Ok(response);
+            try
+            {
+                var response = await _authService.LoginAsync(request);
+                return Ok(response);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         // =====================================================

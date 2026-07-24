@@ -31,7 +31,7 @@
     
     <div class="nav-section-label" style="padding-left: 12px; margin-top: 8px;">MAIN</div>
     
-    <button class="nav-item" routerLink="/admin/dashboard" routerLinkActive="active" style="border-radius: 8px;">
+    <button class="nav-item" [routerLink]="dashboardRoute" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" style="border-radius: 8px;">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       <span class="txt">Dashboard</span>
     </button>
@@ -46,76 +46,57 @@
       <span class="txt">My Leaves</span>
     </button>
     
-    <button class="nav-item" style="border-radius: 8px;">
+    <button class="nav-item" routerLink="/employee/leave-balance" routerLinkActive="active" style="border-radius: 8px;">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
       <span class="txt">Leave Balance</span>
     </button>
     
-    <button class="nav-item" style="border-radius: 8px;">
+    <button class="nav-item" routerLink="/employee/calendar" routerLinkActive="active" style="border-radius: 8px;">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
       <span class="txt">Calendar</span>
     </button>
     
-    <button class="nav-item" style="border-radius: 8px;">
+    <button class="nav-item" routerLink="/employee/reports" routerLinkActive="active" style="border-radius: 8px;">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
       <span class="txt">Reports</span>
     </button>
 
-    <div class="nav-section-label" style="padding-left: 12px; margin-top: 16px;">ADMIN</div>
-    
-    <button class="nav-item" routerLink="/admin/dashboard" routerLinkActive="active" style="border-radius: 8px;">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-      <span class="txt">Dashboard</span>
-    </button>
+    <ng-container *ngIf="isManager || isAdmin">
+      <div class="nav-section-label" style="padding-left: 12px; margin-top: 16px;">MANAGER</div>
+      
+      <button class="nav-item" routerLink="/manager/approvals" routerLinkActive="active" style="border-radius: 8px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span class="txt">Approvals</span>
+      </button>
+    </ng-container>
 
-    <button class="nav-item" style="border-radius: 8px;">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-      <span class="txt">User Management</span>
-    </button>
-    
-    <button class="nav-item" routerLink="/admin/employees" routerLinkActive="active" style="border-radius: 8px;">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-      <span class="txt">Employees</span>
-    </button>
-    
-    <button class="nav-item" style="border-radius: 8px;">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-      <span class="txt">Departments</span>
-    </button>
-    
-    <button class="nav-item" routerLink="/admin/leave-types" routerLinkActive="active" style="border-radius: 8px;">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-      <span class="txt">Leave Types</span>
-    </button>
+    <ng-container *ngIf="isAdmin">
+      <div class="nav-section-label" style="padding-left: 12px; margin-top: 16px;">ADMIN</div>
+      
+      <button class="nav-item" routerLink="/admin/employees" routerLinkActive="active" style="border-radius: 8px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <span class="txt">Employees</span>
+      </button>
+      
+      <button class="nav-item" routerLink="/admin/leave-types" routerLinkActive="active" style="border-radius: 8px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        <span class="txt">Leave Types</span>
+      </button>
 
-    <button class="nav-item" style="border-radius: 8px;">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-      <span class="txt">Leave Requests</span>
-    </button>
-    
-    <button class="nav-item" style="border-radius: 8px;">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      <span class="txt">Approvals</span>
-    </button>
-
-    <button class="nav-item" routerLink="/admin/reports" routerLinkActive="active" style="border-radius: 8px;">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-      <span class="txt">Reports</span>
-    </button>
-
-    <button class="nav-item" style="border-radius: 8px;">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-      <span class="txt">System Settings</span>
-    </button>
+      <button class="nav-item" routerLink="/admin/reports" routerLinkActive="active" style="border-radius: 8px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <span class="txt">Reports</span>
+      </button>
+    </ng-container>
   </div>
 
   <!-- Profile Menu at bottom of sidebar matching screenshot -->
   <div class="sidebar-bottom" style="padding: 12px; margin-top: auto;">
     <div class="sidebar-user" style="background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; position: relative;" (click)="toggleDropdown($event)">
-      <div class="avatar" style="background: #00d284; color: #fff; width: 36px; height: 36px;">AD</div>
+      <div class="avatar" style="background: #00d284; color: #fff; width: 36px; height: 36px;">{{ userInitials }}</div>
       <div class="who" style="flex: 1; min-width: 0;">
-        <div class="name" style="font-weight: 600; font-size: 14px; color: var(--ink);">Admin User</div>
-        <div class="role" style="font-size: 12px; color: var(--slate);">Administrator</div>
+        <div class="name" style="font-weight: 600; font-size: 14px; color: var(--ink);">{{ userFullName }}</div>
+        <div class="role" style="font-size: 12px; color: var(--slate);">{{ userRoleTitle }}</div>
         <div style="font-size: 11px; color: var(--slate); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
           <div style="width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></div> Online
         </div>

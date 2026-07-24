@@ -1,0 +1,66 @@
+<div class="screen">
+  <div class="page-head" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2 style="font-size:24px; font-weight:700;">My Reports</h2>
+      <p>Analyze your leave history and trends over time.</p>
+    </div>
+    <button class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+      <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      Export Report
+    </button>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; padding: 24px;">
+    
+    <!-- Chart Area -->
+    <div style="background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px;">
+      <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 24px;">Leave History (2026)</h3>
+      <div style="height: 300px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
+        <!-- Mock Bar Chart -->
+        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <div style="width: 32px; height: 120px; background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; border-radius: 4px 4px 0 0;"></div>
+          <span style="font-size: 12px; color: var(--slate);">Jan</span>
+        </div>
+        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <div style="width: 32px; height: 40px; background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; border-radius: 4px 4px 0 0;"></div>
+          <span style="font-size: 12px; color: var(--slate);">Feb</span>
+        </div>
+        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <div style="width: 32px; height: 0px;"></div>
+          <span style="font-size: 12px; color: var(--slate);">Mar</span>
+        </div>
+        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <div style="width: 32px; height: 80px; background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; border-radius: 4px 4px 0 0;"></div>
+          <span style="font-size: 12px; color: var(--slate);">Apr</span>
+        </div>
+        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <div style="width: 32px; height: 200px; background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; border-radius: 4px 4px 0 0;"></div>
+          <span style="font-size: 12px; color: var(--slate);">May</span>
+        </div>
+        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <div style="width: 32px; height: 40px; background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; border-radius: 4px 4px 0 0;"></div>
+          <span style="font-size: 12px; color: var(--slate);">Jun</span>
+        </div>
+        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <div style="width: 32px; height: 60px; background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; border-radius: 4px 4px 0 0;"></div>
+          <span style="font-size: 12px; color: var(--slate);">Jul</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Area -->
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div style="background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px;">
+        <h4 style="font-size: 13px; color: var(--slate); text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Most Frequent Leave</h4>
+        <div style="font-size: 20px; font-weight: 700; color: var(--ink);">Sick Leave</div>
+        <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">4 days taken this year</div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px;">
+        <h4 style="font-size: 13px; color: var(--slate); text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Current Status</h4>
+        <div style="font-size: 20px; font-weight: 700; color: var(--ink);">Good Standing</div>
+        <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">You have 12 total days remaining</div>
+      </div>
+    </div>
+  </div>
+</div>

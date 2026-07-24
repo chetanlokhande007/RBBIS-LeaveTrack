@@ -9,6 +9,9 @@ import { EmployeeDashboardComponent } from './features/employee/dashboard.compon
 import { ApplyLeaveComponent } from './features/employee/apply-leave.component';
 import { MyRequestsComponent } from './features/employee/my-requests.component';
 import { MyAttendanceComponent } from './features/employee/my-attendance.component';
+import { LeaveBalanceComponent } from './features/employee/leave-balance/leave-balance.component';
+import { CalendarComponent } from './features/employee/calendar/calendar.component';
+import { EmployeeReportsComponent } from './features/employee/employee-reports/employee-reports.component';
 
 // Manager Portal
 import { ManagerDashboardComponent } from './features/manager/dashboard.component';
@@ -43,25 +46,43 @@ export const routes: Routes = [
         path: 'employee/dashboard',
         component: EmployeeDashboardComponent,
         canActivate: [roleGuard],
-        data: { roles: ['Employee'] }
+        data: { roles: ['Employee', 'Manager', 'Admin', 'HR'] }
       },
       {
         path: 'employee/apply',
         component: ApplyLeaveComponent,
         canActivate: [roleGuard],
-        data: { roles: ['Employee'] }
+        data: { roles: ['Employee', 'Manager', 'Admin', 'HR'] }
       },
       {
         path: 'employee/requests',
         component: MyRequestsComponent,
         canActivate: [roleGuard],
-        data: { roles: ['Employee'] }
+        data: { roles: ['Employee', 'Manager', 'Admin', 'HR'] }
       },
       {
         path: 'employee/attendance',
         component: MyAttendanceComponent,
         canActivate: [roleGuard],
-        data: { roles: ['Employee'] }
+        data: { roles: ['Employee', 'Manager', 'Admin', 'HR'] }
+      },
+      {
+        path: 'employee/leave-balance',
+        component: LeaveBalanceComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['Employee', 'Manager', 'Admin', 'HR'] }
+      },
+      {
+        path: 'employee/calendar',
+        component: CalendarComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['Employee', 'Manager', 'Admin', 'HR'] }
+      },
+      {
+        path: 'employee/reports',
+        component: EmployeeReportsComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['Employee', 'Manager', 'Admin', 'HR'] }
       },
 
       // Manager routes

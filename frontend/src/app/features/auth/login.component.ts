@@ -73,28 +73,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  demoLogin(role: 'admin' | 'manager' | 'employee') {
-    let u = '';
-    let p = '';
-    
-    switch (role) {
-      case 'admin':
-        u = 'admin';
-        p = 'admin123';
-        break;
-      case 'manager':
-        u = 'manager1';
-        p = 'manager123';
-        break;
-      case 'employee':
-        u = 'employee1';
-        p = 'employee123';
-        break;
-    }
-
-    this.loginForm.setValue({ username: u, password: p });
-    this.login();
-  }
 
   private redirectByRole() {
     const role = this.authService.userRole;
@@ -104,6 +82,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.router.navigate(['/manager/dashboard']);
     } else if (role === 'Employee') {
       this.router.navigate(['/employee/dashboard']);
+    } else if (role === 'HR') {
+      this.router.navigate(['/admin/employees']);
     }
   }
 }

@@ -39,6 +39,22 @@ export class SidebarComponent {
     return role || '';
   }
 
+  get isAdmin(): boolean {
+    return this.authService.userRole === 'Admin' || this.authService.userRole === 'HR';
+  }
+
+  get isManager(): boolean {
+    return this.authService.userRole === 'Manager';
+  }
+
+  get dashboardRoute(): string {
+    const role = this.authService.userRole;
+    if (role === 'Admin') return '/admin/dashboard';
+    if (role === 'HR') return '/admin/employees';
+    if (role === 'Manager') return '/manager/dashboard';
+    return '/employee/dashboard';
+  }
+
   toggleDropdown(event: Event) {
     event.stopPropagation();
     this.userDropdownOpen = !this.userDropdownOpen;

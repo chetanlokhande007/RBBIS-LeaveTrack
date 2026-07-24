@@ -1,0 +1,67 @@
+<div class="screen">
+  <div class="page-head">
+    <h2 style="font-size:24px; font-weight:700;">Leave Balance</h2>
+    <p>View your available, used, and total leave days for the year.</p>
+  </div>
+
+  <div class="table-wrap" style="padding: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+    
+    <!-- Card 1 -->
+    <div style="background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; align-items: center;">
+      <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); color: #10b981; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      </div>
+      <div style="font-size: 32px; font-weight: 700; color: var(--ink);">12</div>
+      <div style="color: var(--slate); font-size: 14px; margin-top: 4px;">Available Leaves</div>
+    </div>
+
+    <!-- Card 2 -->
+    <div style="background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; align-items: center;">
+      <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(239, 68, 68, 0.1); color: #ef4444; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      </div>
+      <div style="font-size: 32px; font-weight: 700; color: var(--ink);">8</div>
+      <div style="color: var(--slate); font-size: 14px; margin-top: 4px;">Used Leaves</div>
+    </div>
+
+    <!-- Card 3 -->
+    <div style="background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; align-items: center;">
+      <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(59, 130, 246, 0.1); color: #3b82f6; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      </div>
+      <div style="font-size: 32px; font-weight: 700; color: var(--ink);">20</div>
+      <div style="color: var(--slate); font-size: 14px; margin-top: 4px;">Total Allowance</div>
+    </div>
+
+  </div>
+
+  <div class="table-wrap" style="margin-top: 24px;">
+    <div class="table-toolbar">
+      <div style="font-weight: 600; font-size: 16px;">Leave Type Breakdown</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Leave Type</th>
+          <th>Total Allowed</th>
+          <th>Used</th>
+          <th>Remaining</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight: 600;">Casual Leave</td>
+          <td>10</td>
+          <td>4</td>
+          <td><span class="badge badge-success">6</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;">Sick Leave</td>
+          <td>10</td>
+          <td>4</td>
+          <td><span class="badge badge-warning">6</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
