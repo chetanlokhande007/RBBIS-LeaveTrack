@@ -5,7 +5,11 @@
         <h2 style="font-size:24px; font-weight:700;">Employees Directory</h2>
         <p>Manage employee records, department allocations, designations, and system accounts.</p>
       </div>
-      <div>
+      <div style="display: flex; gap: 12px;">
+        <button class="btn btn-ghost" style="border: 1px solid var(--line);">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export Excel
+        </button>
         <button class="btn btn-primary" (click)="openAddModal()">
           <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
           Add Employee
@@ -69,24 +73,36 @@
         </tr>
       </tbody>
     </table>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="filteredEmployees.length > 0" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-top: 1px solid var(--line); font-size: 13px;">
+      <div style="color: var(--slate);">
+        Showing {{ (page - 1) * pageSize + 1 }} to {{ page * pageSize > totalCount ? totalCount : page * pageSize }} of {{ totalCount }} employees
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-ghost" style="padding: 6px 12px; font-size: 13px;" [disabled]="page === 1" (click)="changePage(page - 1)">Previous</button>
+        <button class="btn btn-ghost" style="padding: 6px 12px; font-size: 13px;" [disabled]="page * pageSize >= totalCount" (click)="changePage(page + 1)">Next</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Employee Modal Dialog -->
-  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-    <div class="modal-box" (click)="$event.stopPropagation()">
-      <div class="modal-head">
-        <h3 style="font-size:16px; font-weight:700;">{{ isEdit ? 'Edit Employee Details' : 'Register New Employee' }}</h3>
-        <button class="close-x" (click)="closeModal()">
+  <!-- Employee Drawer -->
+  <div class="drawer-overlay" *ngIf="showModal" (click)="closeModal()" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 999; display: flex; justify-content: flex-end;">
+    <div class="drawer-box" (click)="$event.stopPropagation()" style="width: 480px; max-width: 100%; height: 100vh; background: var(--surface); display: flex; flex-direction: column; box-shadow: -4px 0 24px rgba(0,0,0,0.1); animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+      <div class="drawer-head" style="padding: 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 18px; font-weight: 700;">{{ isEdit ? 'Edit Employee Details' : 'Register New Employee' }}</h3>
+        <button class="close-x" (click)="closeModal()" style="background: none; border: none; cursor: pointer; color: var(--slate);">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
 
-      <div class="modal-body">
+      <div class="drawer-body" style="padding: 24px; flex: 1; overflow-y: auto;">
         <form [formGroup]="employeeForm">
           
           <!-- AUTH CREDENTIALS SECTION (Add mode only) -->
-          <div *ngIf="!isEdit" style="background:var(--canvas); border-radius:var(--radius); padding:14px; margin-bottom:18px; border:1px solid var(--line);">
-            <h4 style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--slate); margin-bottom:10px;">User Authentication Details</h4>
+          <div *ngIf="!isEdit" style="background:var(--canvas); border-radius:var(--radius); padding:16px; margin-bottom:24px; border:1px solid var(--line);">
+            <h4 style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--slate); margin-bottom:12px;">User Authentication Details</h4>
             
             <div class="form-row">
               <div class="field">
@@ -110,7 +126,7 @@
             </div>
           </div>
 
-          <h4 style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--slate); margin-bottom:10px;" *ngIf="!isEdit">Employee Profile Details</h4>
+          <h4 style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--slate); margin-bottom:12px;" *ngIf="!isEdit">Employee Profile Details</h4>
 
           <div class="field">
             <label>Full Name</label>
@@ -125,11 +141,17 @@
           <div class="form-row">
             <div class="field">
               <label>Department</label>
-              <input type="text" formControlName="department" placeholder="e.g. Engineering" required>
+              <select formControlName="department" required>
+                <option value="">Select Department</option>
+                <option *ngFor="let d of departments" [value]="d.name">{{ d.name }}</option>
+              </select>
             </div>
             <div class="field">
               <label>Designation</label>
-              <input type="text" formControlName="designation" placeholder="e.g. Software Engineer" required>
+              <select formControlName="designation" required>
+                <option value="">Select Designation</option>
+                <option *ngFor="let d of designations" [value]="d.name">{{ d.name }}</option>
+              </select>
             </div>
           </div>
 
@@ -150,8 +172,8 @@
         </form>
       </div>
 
-      <div class="modal-foot">
-        <button type="button" class="btn btn-ghost" (click)="closeModal()">Close</button>
+      <div class="drawer-foot" style="padding: 16px 24px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 12px; background: var(--surface);">
+        <button type="button" class="btn btn-ghost" (click)="closeModal()">Cancel</button>
         <button type="button" class="btn btn-primary" [disabled]="employeeForm.invalid || submitting" (click)="saveEmployee()">
           <span *ngIf="!submitting">Save Profile</span>
           <span *ngIf="submitting">Saving...</span>
@@ -160,3 +182,10 @@
     </div>
   </div>
 </div>
+
+<style>
+  @keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+</style>

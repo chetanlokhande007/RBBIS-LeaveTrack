@@ -21,6 +21,37 @@ namespace LeaveAttendance.API.Repositories
                 .ToListAsync();
         }
 
+        public async Task<(IEnumerable<Employee> Items, int TotalCount)> GetPagedEmployeesAsync(int page, int pageSize, string? search, string? department, string? designation)
+        {
+            var query = _context.Employees.Include(e => e.Manager).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var searchLower = search.ToLower();
+                query = query.Where(e => e.FullName.ToLower().Contains(searchLower) || e.Email.ToLower().Contains(searchLower));
+            }
+
+            if (!string.IsNullOrWhiteSpace(department))
+            {
+                query = query.Where(e => e.Department == department);
+            }
+
+            if (!string.IsNullOrWhiteSpace(designation))
+            {
+                query = query.Where(e => e.Designation == designation);
+            }
+
+            var totalCount = await query.CountAsync();
+            
+            var items = await query
+                .OrderBy(e => e.FullName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
         public async Task<IEnumerable<Employee>> GetEmployeesByManagerIdAsync(int managerId)
         {
             return await _context.Employees

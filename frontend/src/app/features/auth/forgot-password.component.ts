@@ -26,6 +26,9 @@ export class ForgotPasswordComponent implements OnDestroy {
   private timerSub?: Subscription;
   private expiryTimerSub?: Subscription;
 
+  showPassword = false;
+  showConfirmPassword = false;
+
   resetToken: string = '';
 
   constructor(
@@ -52,6 +55,14 @@ export class ForgotPasswordComponent implements OnDestroy {
     const p1 = form.get('newPassword')?.value;
     const p2 = form.get('confirmPassword')?.value;
     return p1 === p2 ? null : { mismatch: true };
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPassword() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   ngOnDestroy() {

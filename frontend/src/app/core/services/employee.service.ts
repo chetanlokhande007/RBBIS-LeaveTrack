@@ -12,6 +12,14 @@ export class EmployeeService {
     return this.api.get<any[]>('employees');
   }
 
+  getPaged(page: number, pageSize: number, search?: string, department?: string, designation?: string): Observable<any> {
+    let url = `employees/paged?page=${page}&pageSize=${pageSize}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (department) url += `&department=${encodeURIComponent(department)}`;
+    if (designation) url += `&designation=${encodeURIComponent(designation)}`;
+    return this.api.get<any>(url);
+  }
+
   getById(id: number): Observable<any> {
     return this.api.get<any>(`employees/${id}`);
   }

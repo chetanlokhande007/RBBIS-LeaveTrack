@@ -100,17 +100,25 @@ export const routes: Routes = [
       },
 
       // Admin routes
-      {
-        path: 'admin/dashboard',
-        component: AdminDashboardComponent,
-        canActivate: [roleGuard],
-        data: { roles: ['Admin'] }
+      { 
+        path: 'admin/dashboard', 
+        loadComponent: () => import('./features/admin/dashboard.component').then(m => m.AdminDashboardComponent),
+        canActivate: [roleGuard], data: { roles: ['Admin', 'HR'] }
       },
-      {
-        path: 'admin/employees',
-        component: EmployeesComponent,
-        canActivate: [roleGuard],
-        data: { roles: ['Admin', 'HR'] }
+      { 
+        path: 'admin/employees', 
+        loadComponent: () => import('./features/admin/employees.component').then(m => m.EmployeesComponent),
+        canActivate: [roleGuard], data: { roles: ['Admin', 'HR'] }
+      },
+      { 
+        path: 'admin/organization', 
+        loadComponent: () => import('./features/admin/organization.component').then(m => m.OrganizationComponent),
+        canActivate: [roleGuard], data: { roles: ['Admin', 'HR'] }
+      },
+      { 
+        path: 'admin/holidays', 
+        loadComponent: () => import('./features/admin/holidays.component').then(m => m.HolidaysComponent),
+        canActivate: [roleGuard], data: { roles: ['Admin', 'HR'] }
       },
       {
         path: 'admin/leave-types',
@@ -118,11 +126,10 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         data: { roles: ['Admin'] }
       },
-      {
-        path: 'admin/reports',
-        component: ReportsComponent,
-        canActivate: [roleGuard],
-        data: { roles: ['Admin'] }
+      { 
+        path: 'admin/reports', 
+        loadComponent: () => import('./features/admin/reports.component').then(m => m.ReportsComponent),
+        canActivate: [roleGuard], data: { roles: ['Admin', 'HR'] }
       },
       {
         path: 'admin/audit',

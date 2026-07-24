@@ -17,6 +17,8 @@ export class AdminDashboardComponent implements OnInit {
   leavesToday = 0;
   pendingApprovals = 0;
   holidaysCount = 0;
+  presentToday = 0;
+  absentToday = 0;
 
   deptBreakdown = [
     { name: 'Engineering', percentage: 84, val: '84%' },
@@ -70,6 +72,10 @@ export class AdminDashboardComponent implements OnInit {
       this.pendingApprovals = requests.filter(r => r.status === 'Pending').length;
       this.rejectedLeaves = requests.filter(r => r.status === 'Rejected').length;
       
+      // Calculate mock attendance (Phase 1)
+      this.presentToday = Math.max(0, this.totalEmployees - this.leavesToday - 1);
+      this.absentToday = this.totalEmployees > 0 ? 1 : 0; // Mock 1 absent employee for display
+
       // Sort by appliedOn (newest first) and take top 5
       this.recentRequests = requests.sort((a, b) => new Date(b.appliedOn).getTime() - new Date(a.appliedOn).getTime()).slice(0, 5);
 

@@ -17,6 +17,8 @@ namespace LeaveAttendance.API.Data
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Holiday> Holidays { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Designation> Designations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TitleService } from '../../core/services/title.service';
 import { EmployeeService } from '../../core/services/employee.service';
+import { DepartmentService } from '../../core/services/department.service';
+import { DesignationService } from '../../core/services/designation.service';
 import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
@@ -14,7 +16,12 @@ import { NotificationService } from '../../core/services/notification.service';
 export class EmployeesComponent implements OnInit {
   employees: any[] = [];
   filteredEmployees: any[] = [];
+  departments: any[] = [];
+  designations: any[] = [];
   searchQuery = '';
+  totalCount = 0;
+  page = 1;
+  pageSize = 10;
   
   showModal = false;
   isEdit = false;
@@ -26,6 +33,8 @@ export class EmployeesComponent implements OnInit {
     private fb: FormBuilder,
     private titleService: TitleService,
     private employeeService: EmployeeService,
+    private departmentService: DepartmentService,
+    private designationService: DesignationService,
     private notification: NotificationService
   ) {
     this.employeeForm = this.fb.group({
@@ -43,30 +52,35 @@ export class EmployeesComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Manage Employees');
-    this.loadEmployees();
+    this.loadPagedEmployees();
+    this.loadDepartmentsAndDesignations();
   }
 
-  loadEmployees() {
-    this.employeeService.getAll().subscribe({
+  loadDepartmentsAndDesignations() {
+    this.departmentService.getAll().subscribe(res => this.departments = res);
+    this.designationService.getAll().subscribe(res => this.designations = res);
+  }
+
+  loadPagedEmployees() {
+    this.employeeService.getPaged(this.page, this.pageSize, this.searchQuery).subscribe({
       next: (res) => {
-        this.employees = res;
-        this.applyFilters();
+        this.employees = res.data;
+        this.filteredEmployees = res.data; // Keeping variable for template backwards compatibility
+        this.totalCount = res.totalCount;
       }
     });
   }
 
   applyFilters() {
-    if (!this.searchQuery) {
-      this.filteredEmployees = this.employees;
-      return;
+    this.page = 1; // Reset to page 1 on search
+    this.loadPagedEmployees();
+  }
+
+  changePage(newPage: number) {
+    if (newPage >= 1 && newPage <= Math.ceil(this.totalCount / this.pageSize)) {
+      this.page = newPage;
+      this.loadPagedEmployees();
     }
-    const q = this.searchQuery.toLowerCase();
-    this.filteredEmployees = this.employees.filter(e => 
-      e.fullName.toLowerCase().includes(q) ||
-      e.department.toLowerCase().includes(q) ||
-      e.designation.toLowerCase().includes(q) ||
-      e.email.toLowerCase().includes(q)
-    );
   }
 
   openAddModal() {
@@ -122,7 +136,7 @@ export class EmployeesComponent implements OnInit {
           this.submitting = false;
           this.showModal = false;
           this.notification.show('Employee profile updated successfully', 'success');
-          this.loadEmployees();
+          this.loadPagedEmployees();
         },
         error: (err) => {
           this.submitting = false;
@@ -154,7 +168,7 @@ export class EmployeesComponent implements OnInit {
           this.submitting = false;
           this.showModal = false;
           this.notification.show('New employee registered successfully!', 'success');
-          this.loadEmployees();
+          this.loadPagedEmployees();
         },
         error: (err) => {
           this.submitting = false;
@@ -169,7 +183,7 @@ export class EmployeesComponent implements OnInit {
       this.employeeService.delete(id).subscribe({
         next: () => {
           this.notification.show('Employee profile removed', 'success');
-          this.loadEmployees();
+          this.loadPagedEmployees();
         },
         error: () => this.notification.show('Failed to remove employee', 'error')
       });

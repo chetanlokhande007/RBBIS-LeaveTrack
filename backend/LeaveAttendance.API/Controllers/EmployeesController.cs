@@ -28,6 +28,16 @@ namespace LeaveAttendance.API.Controllers
             return Ok(employees);
         }
 
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] string? department = null, [FromQuery] string? designation = null)
+        {
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            var employeeIdClaim = User.FindFirst("employeeId")?.Value;
+
+            var (items, totalCount) = await _employeeService.GetPagedEmployeesAsync(page, pageSize, search, department, designation, userRole, employeeIdClaim);
+            return Ok(new { data = items, totalCount });
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {

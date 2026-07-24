@@ -39,18 +39,29 @@ export class SidebarComponent {
     return role || '';
   }
 
-  get isAdmin(): boolean {
-    return this.authService.userRole === 'Admin' || this.authService.userRole === 'HR';
+  get isSystemAdmin(): boolean {
+    return this.authService.userRole === 'Admin';
+  }
+
+  get isHR(): boolean {
+    return this.authService.userRole === 'HR';
+  }
+
+  get isAdminOrHR(): boolean {
+    return this.isSystemAdmin || this.isHR;
   }
 
   get isManager(): boolean {
     return this.authService.userRole === 'Manager';
   }
 
+  get isEmployee(): boolean {
+    return this.authService.userRole === 'Employee';
+  }
+
   get dashboardRoute(): string {
     const role = this.authService.userRole;
-    if (role === 'Admin') return '/admin/dashboard';
-    if (role === 'HR') return '/admin/employees';
+    if (role === 'Admin' || role === 'HR') return '/admin/dashboard';
     if (role === 'Manager') return '/manager/dashboard';
     return '/employee/dashboard';
   }

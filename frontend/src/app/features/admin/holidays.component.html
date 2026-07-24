@@ -1,0 +1,86 @@
+<div class="screen">
+  <div class="page-head">
+    <div class="page-head-row">
+      <div>
+        <h2 style="font-size:24px; font-weight:700;">Holiday Calendar</h2>
+        <p>Manage company-wide holidays and non-working days.</p>
+      </div>
+      <div>
+        <button class="btn btn-primary" (click)="openAddModal()">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Add Holiday
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="calendar-wrapper">
+    <div class="calendar-header">
+      <button class="btn btn-ghost icon-only" (click)="prevMonth()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <h3 style="margin: 0; font-size: 18px; font-weight: 700;">{{ months[currentMonth] }} {{ currentYear }}</h3>
+      <button class="btn btn-ghost icon-only" (click)="nextMonth()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
+    <div class="calendar-grid">
+      <div class="weekday-header" *ngFor="let day of weekdays">{{ day }}</div>
+      
+      <div *ngFor="let day of calendarDays" 
+           class="calendar-day" 
+           [class.empty]="!day.isCurrentMonth"
+           (click)="day.isCurrentMonth && openAddModal(day.dateString)">
+        
+        <div *ngIf="day.isCurrentMonth">
+          <div class="day-number">{{ day.date }}</div>
+          
+          <div class="holiday-badges">
+            <div *ngFor="let h of day.holidays" class="holiday-badge" (click)="openEditModal(h, $event)">
+              <div class="h-name">{{ h.name }}</div>
+              <button class="h-del" (click)="deleteItem(h.id, $event)">×</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drawer -->
+  <div class="drawer-overlay" *ngIf="showModal" (click)="closeModal()" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 999; display: flex; justify-content: flex-end;">
+    <div class="drawer-box" (click)="$event.stopPropagation()" style="width: 400px; max-width: 100%; height: 100vh; background: var(--surface); display: flex; flex-direction: column; box-shadow: -4px 0 24px rgba(0,0,0,0.1); animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+      <div class="drawer-head" style="padding: 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 18px; font-weight: 700;">{{ isEdit ? 'Edit Holiday' : 'Add Holiday' }}</h3>
+        <button class="close-x" (click)="closeModal()" style="background: none; border: none; cursor: pointer; color: var(--slate);">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="drawer-body" style="padding: 24px; flex: 1; overflow-y: auto;">
+        <form [formGroup]="form">
+          <div class="field">
+            <label>Date</label>
+            <input type="date" formControlName="date" required>
+          </div>
+          <div class="field">
+            <label>Holiday Name</label>
+            <input type="text" formControlName="name" placeholder="e.g. Christmas" required>
+          </div>
+          <div class="field">
+            <label>Description (Optional)</label>
+            <textarea formControlName="description" rows="3" placeholder="Brief description..."></textarea>
+          </div>
+        </form>
+      </div>
+
+      <div class="drawer-foot" style="padding: 16px 24px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 12px; background: var(--surface);">
+        <button type="button" class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" [disabled]="form.invalid || submitting" (click)="save()">
+          <span *ngIf="!submitting">Save</span>
+          <span *ngIf="submitting">Saving...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

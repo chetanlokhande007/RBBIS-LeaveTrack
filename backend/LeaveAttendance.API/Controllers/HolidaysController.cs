@@ -33,7 +33,7 @@ namespace LeaveAttendance.API.Controllers
             return Ok(dto);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,HR")]
         [HttpPost]
         public async Task<ActionResult<HolidayDTO>> Create([FromBody] HolidayDTO dto)
         {
@@ -41,7 +41,7 @@ namespace LeaveAttendance.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,HR")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] HolidayDTO dto)
         {
@@ -49,7 +49,7 @@ namespace LeaveAttendance.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,HR")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

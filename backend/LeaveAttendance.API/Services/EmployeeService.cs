@@ -22,6 +22,7 @@ namespace LeaveAttendance.API.Services
                 return employees.Select(MapToDTO);
             }
             
+
             if (userRole == "Manager" && int.TryParse(employeeIdClaim, out int managerId))
             {
                 var reports = await _employeeRepository.GetEmployeesByManagerIdAsync(managerId);
@@ -36,6 +37,16 @@ namespace LeaveAttendance.API.Services
                 return new[] { MapToDTO(employee) };
             }
 
+            throw new UnauthorizedAccessException("You are not authorized to view this resource.");
+        }
+
+        public async Task<(IEnumerable<EmployeeDTO> Items, int TotalCount)> GetPagedEmployeesAsync(int page, int pageSize, string? search, string? department, string? designation, string? userRole, string? employeeIdClaim)
+        {
+            if (userRole == "Admin" || userRole == "HR")
+            {
+                var (items, total) = await _employeeRepository.GetPagedEmployeesAsync(page, pageSize, search, department, designation);
+                return (items.Select(MapToDTO), total);
+            }
             throw new UnauthorizedAccessException("You are not authorized to view this resource.");
         }
 

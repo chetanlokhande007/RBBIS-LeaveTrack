@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   clockTime = '12:00';
   private clockInterval: any;
   loading = false;
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,6 +28,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
   ngOnInit() {
