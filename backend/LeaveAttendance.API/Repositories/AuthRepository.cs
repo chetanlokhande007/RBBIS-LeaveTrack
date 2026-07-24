@@ -22,6 +22,18 @@ namespace LeaveAttendance.API.Repositories
                 .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
         }
 
+        public async Task<User?> GetUserByUsernameOrEmailAsync(string identifier)
+        {
+            var lowerIdentifier = identifier.ToLower();
+            return await _context.Users
+                .Include(u => u.Role)
+                .Include(u => u.Employee)
+                .FirstOrDefaultAsync(u => 
+                    u.Username.ToLower() == lowerIdentifier || 
+                    (u.Employee != null && u.Employee.Email.ToLower() == lowerIdentifier)
+                );
+        }
+
         public async Task<User?> GetUserByResetTokenAsync(string token)
         {
             return await _context.Users

@@ -5,6 +5,7 @@ namespace LeaveAttendance.API.Repositories.Interfaces
     public interface IAuthRepository
     {
         Task<User?> GetUserByUsernameAsync(string username);
+        Task<User?> GetUserByUsernameOrEmailAsync(string identifier);
         Task<User?> GetUserByResetTokenAsync(string token);
         Task<bool> UsernameExistsAsync(string username);
         Task<Role?> GetRoleByIdAsync(int roleId);

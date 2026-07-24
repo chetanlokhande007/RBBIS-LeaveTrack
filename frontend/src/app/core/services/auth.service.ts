@@ -67,6 +67,18 @@ export class AuthService {
     return this.api.post<{message: string, simulation_token?: string}>('auth/forgot-password', { username });
   }
 
+  sendForgotPasswordOtp(username: string): Observable<{message: string}> {
+    return this.api.post<{message: string}>('auth/send-forgot-password-otp', { username });
+  }
+
+  resendForgotPasswordOtp(username: string): Observable<{message: string}> {
+    return this.api.post<{message: string}>('auth/resend-forgot-password-otp', { username });
+  }
+
+  verifyForgotPasswordOtp(username: string, otp: string): Observable<{message: string, token: string}> {
+    return this.api.post<{message: string, token: string}>('auth/verify-forgot-password-otp', { username, otp });
+  }
+
   resetPassword(token: string, newPassword: string): Observable<{message: string}> {
     return this.api.post<{message: string}>('auth/reset-password', { token, newPassword });
   }

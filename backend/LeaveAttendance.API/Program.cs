@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Register Services and Repositories
+builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IEmailService, LeaveAttendance.API.Services.EmailService>();
 builder.Services.AddScoped<LeaveAttendance.API.Services.IJwtService, LeaveAttendance.API.Services.JwtService>();
 builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IAuthRepository, LeaveAttendance.API.Repositories.AuthRepository>();
 builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IAuthService, LeaveAttendance.API.Services.AuthService>();

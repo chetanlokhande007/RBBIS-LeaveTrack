@@ -295,12 +295,19 @@ a {
 
 .login-form-box {
   width: 100%;
-  max-width: 380px;
+  max-width: 400px;
+  background: var(--surface-solid);
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
 }
 
 .login-form-box h2 {
-  font-size: 23px;
-  margin-bottom: 6px;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--ink);
 }
 
 .login-form-box .sub {

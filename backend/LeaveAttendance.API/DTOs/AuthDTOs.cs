@@ -40,4 +40,20 @@ namespace LeaveAttendance.API.DTOs
         public string OldPassword { get; set; } = string.Empty;
         public string NewPassword { get; set; } = string.Empty;
     }
+
+    public class SendOtpRequest
+    {
+        public string Username { get; set; } = string.Empty;
+    }
+
+    public class ResendOtpRequest
+    {
+        public string Username { get; set; } = string.Empty;
+    }
+
+    public class VerifyOtpRequest
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Otp { get; set; } = string.Empty;
+    }
 }

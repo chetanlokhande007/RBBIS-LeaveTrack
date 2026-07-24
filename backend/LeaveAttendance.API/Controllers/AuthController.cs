@@ -62,6 +62,39 @@ namespace LeaveAttendance.API.Controllers
         }
 
         // =====================================================
+        // SEND FORGOT PASSWORD OTP
+        // POST: api/Auth/send-forgot-password-otp
+        // =====================================================
+        [HttpPost("send-forgot-password-otp")]
+        public async Task<IActionResult> SendForgotPasswordOtp([FromBody] SendOtpRequest request)
+        {
+            var response = await _authService.SendForgotPasswordOtpAsync(request);
+            return Ok(response);
+        }
+
+        // =====================================================
+        // RESEND FORGOT PASSWORD OTP
+        // POST: api/Auth/resend-forgot-password-otp
+        // =====================================================
+        [HttpPost("resend-forgot-password-otp")]
+        public async Task<IActionResult> ResendForgotPasswordOtp([FromBody] ResendOtpRequest request)
+        {
+            var response = await _authService.ResendForgotPasswordOtpAsync(request);
+            return Ok(response);
+        }
+
+        // =====================================================
+        // VERIFY FORGOT PASSWORD OTP
+        // POST: api/Auth/verify-forgot-password-otp
+        // =====================================================
+        [HttpPost("verify-forgot-password-otp")]
+        public async Task<IActionResult> VerifyForgotPasswordOtp([FromBody] VerifyOtpRequest request)
+        {
+            var response = await _authService.VerifyForgotPasswordOtpAsync(request);
+            return Ok(response);
+        }
+
+        // =====================================================
         // RESET PASSWORD
         // POST: api/Auth/reset-password
         // =====================================================
