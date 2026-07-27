@@ -3,6 +3,7 @@ using System;
 using LeaveAttendance.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LeaveAttendance.API.Migrations
 {
     [DbContext(typeof(LeaveTrackDbContext))]
-    partial class LeaveTrackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260727091448_AddContactMessages")]
+    partial class AddContactMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,38 +268,6 @@ namespace LeaveAttendance.API.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LeaveAttendance.API.Models.LeaveApproval", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Action")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("ActionDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("ApproverId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LeaveRequestId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApproverId");
-
-                    b.HasIndex("LeaveRequestId");
-
-                    b.ToTable("LeaveApprovals");
-                });
-
             modelBuilder.Entity("LeaveAttendance.API.Models.LeaveRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -464,7 +435,7 @@ namespace LeaveAttendance.API.Migrations
                         new
                         {
                             Id = 1,
-                            PasswordHash = "$2a$11$gwq61Ry6YUz8EJziQct2XuZaHYgTMx1w67odGJor141.8ubj0OmUC",
+                            PasswordHash = "$2a$11$oLQw2V/757u2D.sH16oP6e3U4U.ig1xcKE9bAdq81C4r2qRuQ.iP.",
                             RoleId = 1,
                             Username = "admin"
                         },
@@ -472,7 +443,7 @@ namespace LeaveAttendance.API.Migrations
                         {
                             Id = 2,
                             EmployeeId = 1,
-                            PasswordHash = "$2a$11$DtqU6IcpkJNU9C0FZ55NOeB1W2Bshc8wLA6RYSO5KylH/DAiYADV6",
+                            PasswordHash = "$2a$11$.DnpmSBOCM37WTUlva/8AuZDN4q4mde9A..cnBZMM/FOfFiFNi7zG",
                             RoleId = 2,
                             Username = "manager1"
                         },
@@ -480,7 +451,7 @@ namespace LeaveAttendance.API.Migrations
                         {
                             Id = 3,
                             EmployeeId = 2,
-                            PasswordHash = "$2a$11$qxRBcu2uqtIHdEHcLBKBkOEYXx/EBZlhFwk90MTLr3wHJdH5NCJYm",
+                            PasswordHash = "$2a$11$5fu1qT4Z7YfqvgM1fT74R.BaeSK4wHRvBsbC79mKRp5DzEY.A/D/K",
                             RoleId = 2,
                             Username = "manager2"
                         },
@@ -488,7 +459,7 @@ namespace LeaveAttendance.API.Migrations
                         {
                             Id = 4,
                             EmployeeId = 3,
-                            PasswordHash = "$2a$11$M5gtbhQ714SRGuQiST44TO.xVxQdOqoK/56OY/C.tRE6VzrHaJnba",
+                            PasswordHash = "$2a$11$gXxNtQLYbrj4Rx2Q97DLYuLo912NOWf77EPRJldFlL/3NJK1XlV.u",
                             RoleId = 3,
                             Username = "employee1"
                         },
@@ -496,7 +467,7 @@ namespace LeaveAttendance.API.Migrations
                         {
                             Id = 5,
                             EmployeeId = 4,
-                            PasswordHash = "$2a$11$XzVdbZIvINehnENJ6Al5cOCCc48cha9jZ6j6h3GkaZrDMS937FYnC",
+                            PasswordHash = "$2a$11$LrQ7XmpYh3MERTgWiPQnp.87QelXQZqtDZEbhi5JR.Ecfg2IN4iPm",
                             RoleId = 3,
                             Username = "employee2"
                         });
@@ -523,31 +494,12 @@ namespace LeaveAttendance.API.Migrations
                     b.Navigation("Manager");
                 });
 
-            modelBuilder.Entity("LeaveAttendance.API.Models.LeaveApproval", b =>
-                {
-                    b.HasOne("LeaveAttendance.API.Models.Employee", "Approver")
-                        .WithMany()
-                        .HasForeignKey("ApproverId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("LeaveAttendance.API.Models.LeaveRequest", "LeaveRequest")
-                        .WithMany("Approvals")
-                        .HasForeignKey("LeaveRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Approver");
-
-                    b.Navigation("LeaveRequest");
-                });
-
             modelBuilder.Entity("LeaveAttendance.API.Models.LeaveRequest", b =>
                 {
                     b.HasOne("LeaveAttendance.API.Models.Employee", "ApprovedBy")
                         .WithMany()
                         .HasForeignKey("ApprovedById")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("LeaveAttendance.API.Models.Employee", "Employee")
                         .WithMany()
@@ -589,11 +541,6 @@ namespace LeaveAttendance.API.Migrations
             modelBuilder.Entity("LeaveAttendance.API.Models.Employee", b =>
                 {
                     b.Navigation("DirectReports");
-                });
-
-            modelBuilder.Entity("LeaveAttendance.API.Models.LeaveRequest", b =>
-                {
-                    b.Navigation("Approvals");
                 });
 #pragma warning restore 612, 618
         }

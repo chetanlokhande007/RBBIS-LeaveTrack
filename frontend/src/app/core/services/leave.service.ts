@@ -37,8 +37,8 @@ export class LeaveService {
     return this.api.post<any>('leaverequests', request);
   }
 
-  decideLeaveRequest(id: number, status: number): Observable<any> {
-    return this.api.put<any>(`leaverequests/${id}/decide`, { status });
+  decideLeaveRequest(id: number, status: number, remarks?: string): Observable<any> {
+    return this.api.put<any>(`leaverequests/${id}/decide`, { status, remarks });
   }
 
   cancelLeaveRequest(id: number): Observable<any> {

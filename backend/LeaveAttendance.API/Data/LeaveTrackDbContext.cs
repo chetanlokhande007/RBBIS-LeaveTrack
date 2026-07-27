@@ -19,6 +19,8 @@ namespace LeaveAttendance.API.Data
         public DbSet<Holiday> Holidays { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Designation> Designations { get; set; }
+        public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<LeaveApproval> LeaveApprovals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -62,10 +64,23 @@ namespace LeaveAttendance.API.Data
                     .HasForeignKey(lr => lr.LeaveTypeId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(lr => lr.ApprovedBy)
-                    .WithMany()
-                    .HasForeignKey(lr => lr.ApprovedById)
-                    .OnDelete(DeleteBehavior.Restrict);
+                modelBuilder.Entity<LeaveRequest>()
+                .HasOne(lr => lr.ApprovedBy)
+                .WithMany()
+                .HasForeignKey(lr => lr.ApprovedById)
+                .OnDelete(DeleteBehavior.SetNull);
+                
+            modelBuilder.Entity<LeaveApproval>()
+                .HasOne(la => la.LeaveRequest)
+                .WithMany(lr => lr.Approvals)
+                .HasForeignKey(la => la.LeaveRequestId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            modelBuilder.Entity<LeaveApproval>()
+                .HasOne(la => la.Approver)
+                .WithMany()
+                .HasForeignKey(la => la.ApproverId)
+                .OnDelete(DeleteBehavior.Restrict);
             });
 
             // Attendance configurations

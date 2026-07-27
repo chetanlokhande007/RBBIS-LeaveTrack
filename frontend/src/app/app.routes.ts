@@ -27,10 +27,17 @@ import { AuditLogComponent } from './features/admin/audit-log.component';
 import { ForgotPasswordComponent } from './features/auth/forgot-password.component';
 import { ResetPasswordComponent } from './features/auth/reset-password.component';
 import { HomeComponent } from './features/public/home.component';
+import { BenefitsComponent } from './features/public/benefits/benefits.component';
+import { FaqComponent } from './features/public/faq/faq.component';
+import { ContactComponent } from './features/public/contact/contact.component';
+import { NotFoundComponent } from './features/public/not-found/not-found.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
+  { path: 'benefits', component: BenefitsComponent },
+  { path: 'faq', component: FaqComponent },
+  { path: 'contact', component: ContactComponent },
   { path: 'login', component: LoginComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
@@ -143,5 +150,5 @@ export const routes: Routes = [
     ]
   },
 
-  { path: '**', redirectTo: 'home' }
+  { path: '**', component: NotFoundComponent }
 ];

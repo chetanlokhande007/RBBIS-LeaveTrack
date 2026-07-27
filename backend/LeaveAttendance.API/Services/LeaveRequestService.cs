@@ -2,6 +2,8 @@ using LeaveAttendance.API.DTOs;
 using LeaveAttendance.API.Models;
 using LeaveAttendance.API.Repositories.Interfaces;
 using LeaveAttendance.API.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using LeaveAttendance.API.Data;
 
 namespace LeaveAttendance.API.Services
 {
@@ -9,11 +11,19 @@ namespace LeaveAttendance.API.Services
     {
         private readonly ILeaveRequestRepository _leaveRequestRepository;
         private readonly ILeaveTypeRepository _leaveTypeRepository;
+        private readonly LeaveTrackDbContext _dbContext;
+        private readonly ILogger<LeaveRequestService> _logger;
 
-        public LeaveRequestService(ILeaveRequestRepository leaveRequestRepository, ILeaveTypeRepository leaveTypeRepository)
+        public LeaveRequestService(
+            ILeaveRequestRepository leaveRequestRepository, 
+            ILeaveTypeRepository leaveTypeRepository,
+            LeaveTrackDbContext dbContext,
+            ILogger<LeaveRequestService> logger)
         {
             _leaveRequestRepository = leaveRequestRepository;
             _leaveTypeRepository = leaveTypeRepository;
+            _dbContext = dbContext;
+            _logger = logger;
         }
 
         private static int GetEmployeeId(string? employeeIdClaim)
@@ -113,23 +123,53 @@ namespace LeaveAttendance.API.Services
                 throw new InvalidOperationException("Decision has already been made for this request.");
             }
 
+            var mgrId = GetEmployeeId(deciderEmpIdClaim);
+
             if (userRole == "Manager")
             {
-                var mgrId = GetEmployeeId(deciderEmpIdClaim);
                 if (leaveRequest.Employee.ManagerId != mgrId)
                 {
+                    _logger.LogWarning("Manager {ManagerId} attempted to decide leave #{LeaveId} for employee {EmployeeId} who is not their direct report.", mgrId, id, leaveRequest.EmployeeId);
                     throw new UnauthorizedAccessException("You can only approve or reject leave requests from your direct reports.");
                 }
             }
 
-            leaveRequest.Status = dto.Status;
-            if (int.TryParse(deciderEmpIdClaim, out int deciderId))
+            if (dto.Status == LeaveRequestStatus.Rejected && string.IsNullOrWhiteSpace(dto.Remarks))
             {
-                leaveRequest.ApprovedById = deciderId;
+                throw new ArgumentException("Remarks are mandatory when rejecting a leave request.");
             }
 
-            await _leaveRequestRepository.UpdateLeaveRequestAsync(leaveRequest);
-            return new { message = $"Leave request successfully {dto.Status.ToString().ToLower()}" };
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                leaveRequest.Status = dto.Status;
+                leaveRequest.ApprovedById = mgrId;
+
+                var approvalHistory = new LeaveApproval
+                {
+                    LeaveRequestId = leaveRequest.Id,
+                    ApproverId = mgrId,
+                    Action = dto.Status,
+                    Remarks = dto.Remarks,
+                    ActionDate = DateTime.UtcNow
+                };
+
+                _dbContext.LeaveApprovals.Add(approvalHistory);
+                await _leaveRequestRepository.UpdateLeaveRequestAsync(leaveRequest);
+                
+                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                _logger.LogInformation("Manager {ManagerId} {Action} Leave #{LeaveId}. Reason: {Remarks}", mgrId, dto.Status, id, dto.Remarks ?? "N/A");
+
+                return new { message = $"Leave request successfully {dto.Status.ToString().ToLower()}" };
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Failed to process leave decision for Leave #{LeaveId}", id);
+                throw new InvalidOperationException("An error occurred while processing the leave decision.", ex);
+            }
         }
 
         public async Task<object> CancelLeaveRequestAsync(int id, string? employeeIdClaim)

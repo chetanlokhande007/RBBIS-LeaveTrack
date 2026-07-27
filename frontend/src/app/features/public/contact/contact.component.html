@@ -1,5 +1,7 @@
-      <!-- Contact Us Section -->
-      <section id="contact" class="contact-section">
+<div class="page-wrapper">
+  <app-header></app-header>
+  
+  <section id="contact" class="contact-section">
         <div class="contact-box">
           <div class="contact-info">
             <h2>Get in Touch</h2>
@@ -10,10 +12,19 @@
             </div>
           </div>
           <div class="contact-form">
-            <input type="text" placeholder="Your Name" class="form-input">
-            <input type="email" placeholder="Your Email" class="form-input">
-            <textarea placeholder="How can we help?" rows="3" class="form-input"></textarea>
-            <button class="btn btn-primary w-full">Send Message</button>
+            <input type="text" placeholder="Your Name" class="form-input" [(ngModel)]="formData.name">
+            <input type="email" placeholder="Your Email" class="form-input" [(ngModel)]="formData.email">
+            <textarea placeholder="How can we help?" rows="3" class="form-input" [(ngModel)]="formData.message"></textarea>
+            
+            <div *ngIf="errorMessage" class="error-msg" style="color: #dc2626; font-size: 0.875rem;">{{errorMessage}}</div>
+            <div *ngIf="successMessage" class="success-msg" style="color: #16a34a; font-size: 0.875rem;">{{successMessage}}</div>
+            
+            <button class="btn btn-primary w-full" (click)="sendMessage()" [disabled]="isSubmitting">
+              {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+            </button>
           </div>
         </div>
       </section>
+      
+  <app-footer></app-footer>
+</div>

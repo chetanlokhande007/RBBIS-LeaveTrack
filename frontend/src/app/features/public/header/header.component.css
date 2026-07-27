@@ -1,7 +1,8 @@
 .header {
+  position: relative;
   padding: 1rem 0;
-  background: white;
-  border-bottom: 1px solid #f1f5f9;
+  background: radial-gradient(circle at center, #0a192f 0%, #020c1b 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .header-container {
@@ -19,19 +20,18 @@
   gap: 0.75rem;
 }
 
-.logo-box {
-  background-color: #2563eb;
-  color: white;
-  font-weight: 700;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.875rem;
+.header-img-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  /* Add filter to make logo visible on dark background if it's dark text */
+  filter: brightness(0) invert(1);
 }
 
 .logo-text {
   font-weight: 700;
   font-size: 1.125rem;
-  color: #0f172a;
+  color: #ffffff;
 }
 
 .main-nav {
@@ -42,19 +42,19 @@
 .nav-link {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #475569;
+  color: #cbd5e1;
   padding-bottom: 0.25rem;
   border-bottom: 2px solid transparent;
   text-decoration: none;
 }
 
 .nav-link:hover {
-  color: #2563eb;
+  color: #38bdf8;
 }
 
 .nav-link.active {
-  color: #2563eb;
-  border-bottom-color: #2563eb;
+  color: #38bdf8;
+  border-bottom-color: #38bdf8;
 }
 
 .header-actions {
@@ -77,26 +77,56 @@
 }
 
 .btn-primary {
-  background-color: #2563eb;
+  background-color: #7b61ff;
   color: white;
-  border: 1px solid #2563eb;
+  border: 1px solid #7b61ff;
 }
 
 .btn-primary:hover {
-  background-color: #1d4ed8;
+  background-color: #6a4bf7;
 }
 
 .btn-outline {
   background-color: transparent;
-  color: #2563eb;
-  border: 1px solid #bfdbfe;
+  color: #38bdf8;
+  border: 1px solid #38bdf8;
 }
 
 .btn-outline:hover {
-  background-color: #eff6ff;
-  border-color: #93c5fd;
+  background-color: rgba(56, 189, 248, 0.1);
+  border-color: #7dd3fc;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0.5rem;
 }
 
 @media (max-width: 768px) {
-  .main-nav { display: none; }
+  .main-nav { 
+    display: none; 
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #0a192f;
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 100;
+  }
+  
+  .main-nav.mobile-open {
+    display: flex;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+    margin-left: auto;
+    margin-right: 1rem;
+  }
 }

@@ -28,6 +28,8 @@ namespace LeaveAttendance.API.Models
         public int? ApprovedById { get; set; }
         public Employee? ApprovedBy { get; set; }
         
+        public ICollection<LeaveApproval> Approvals { get; set; } = new List<LeaveApproval>();
+        
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using LeaveAttendance.API.Models;
 
 namespace LeaveAttendance.API.DTOs
@@ -8,6 +9,16 @@ namespace LeaveAttendance.API.DTOs
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int DefaultDaysPerYear { get; set; }
+    }
+
+    public class LeaveApprovalDTO
+    {
+        public int Id { get; set; }
+        public int ApproverId { get; set; }
+        public string ApproverName { get; set; } = string.Empty;
+        public LeaveRequestStatus Action { get; set; }
+        public string? Remarks { get; set; }
+        public DateTime ActionDate { get; set; }
     }
 
     public class LeaveRequestDTO
@@ -24,6 +35,7 @@ namespace LeaveAttendance.API.DTOs
         public int? ApprovedById { get; set; }
         public string? ApprovedByName { get; set; }
         public DateTime CreatedAt { get; set; }
+        public List<LeaveApprovalDTO> Approvals { get; set; } = new List<LeaveApprovalDTO>();
     }
 
     public class LeaveRequestCreateDTO
@@ -37,5 +49,6 @@ namespace LeaveAttendance.API.DTOs
     public class LeaveRequestDecideDTO
     {
         public LeaveRequestStatus Status { get; set; } // Approved or Rejected
+        public string? Remarks { get; set; }
     }
 }

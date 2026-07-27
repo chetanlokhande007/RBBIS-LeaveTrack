@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TitleService } from '../../core/services/title.service';
 import { LeaveService } from '../../core/services/leave.service';
 import { NotificationService } from '../../core/services/notification.service';
@@ -7,12 +8,13 @@ import { NotificationService } from '../../core/services/notification.service';
 @Component({
   selector: 'app-manager-approvals',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './approvals.component.html'
 })
 export class ApprovalsComponent implements OnInit {
   pendingRequests: any[] = [];
   loading = false;
+  remarksMap: { [key: number]: string } = {};
 
   constructor(
     private titleService: TitleService,
@@ -41,10 +43,18 @@ export class ApprovalsComponent implements OnInit {
 
   decideRequest(id: number, approved: boolean) {
     const statusVal = approved ? 1 : 2; // Approved=1, Rejected=2
-    this.leaveService.decideLeaveRequest(id, statusVal).subscribe({
+    const remarks = this.remarksMap[id] || '';
+
+    if (!approved && !remarks.trim()) {
+      this.notification.show('Remarks are mandatory when rejecting.', 'error');
+      return;
+    }
+
+    this.leaveService.decideLeaveRequest(id, statusVal, remarks).subscribe({
       next: () => {
         const actionStr = approved ? 'approved' : 'rejected';
         this.notification.show(`Leave request successfully ${actionStr}!`, 'success');
+        delete this.remarksMap[id];
         this.loadPendingRequests();
       },
       error: (err) => {

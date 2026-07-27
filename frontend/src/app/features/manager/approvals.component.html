@@ -36,15 +36,18 @@
           </td>
           <td class="reason-cell" [title]="req.reason">{{ req.reason }}</td>
           <td>
-            <div class="row-actions">
-              <button class="act-btn approve" (click)="decideRequest(req.id, true)" title="Approve Request">
-                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Approve
-              </button>
-              <button class="act-btn reject" (click)="decideRequest(req.id, false)" title="Reject Request">
-                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                Reject
-              </button>
+            <div class="row-actions" style="flex-direction: column; gap: 8px;">
+              <input type="text" placeholder="Remarks (Required for rejection)" class="form-input" style="padding: 4px 8px; font-size: 12px;" [(ngModel)]="remarksMap[req.id]">
+              <div style="display: flex; gap: 8px;">
+                <button class="act-btn approve" (click)="decideRequest(req.id, true)" title="Approve Request">
+                  <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Approve
+                </button>
+                <button class="act-btn reject" (click)="decideRequest(req.id, false)" title="Reject Request">
+                  <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  Reject
+                </button>
+              </div>
             </div>
           </td>
         </tr>
