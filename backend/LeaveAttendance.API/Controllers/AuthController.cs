@@ -42,7 +42,6 @@ namespace LeaveAttendance.API.Controllers
         // REGISTER
         // POST: api/Auth/register
         // =====================================================
-        [Authorize(Roles = "Admin,HR")]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {

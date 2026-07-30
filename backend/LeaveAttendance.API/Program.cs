@@ -1,6 +1,8 @@
 using System.Text;
 using LeaveAttendance.API.Data;
+using LeaveAttendance.API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -13,14 +15,9 @@ builder.Services.AddControllers();
 // Register Services and Repositories
 builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IEmailService, LeaveAttendance.API.Services.EmailService>();
 builder.Services.AddScoped<LeaveAttendance.API.Services.IJwtService, LeaveAttendance.API.Services.JwtService>();
-builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IAuthRepository, LeaveAttendance.API.Repositories.AuthRepository>();
 builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IAuthService, LeaveAttendance.API.Services.AuthService>();
-builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IUserRepository, LeaveAttendance.API.Repositories.UserRepository>();
-builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IUserService, LeaveAttendance.API.Services.UserService>();
 builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IEmployeeRepository, LeaveAttendance.API.Repositories.EmployeeRepository>();
 builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IEmployeeService, LeaveAttendance.API.Services.EmployeeService>();
-builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IRoleRepository, LeaveAttendance.API.Repositories.RoleRepository>();
-builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IRoleService, LeaveAttendance.API.Services.RoleService>();
 builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.IAttendanceRepository, LeaveAttendance.API.Repositories.AttendanceRepository>();
 builder.Services.AddScoped<LeaveAttendance.API.Services.Interfaces.IAttendanceService, LeaveAttendance.API.Services.AttendanceService>();
 builder.Services.AddScoped<LeaveAttendance.API.Repositories.Interfaces.ILeaveTypeRepository, LeaveAttendance.API.Repositories.LeaveTypeRepository>();
@@ -45,6 +42,11 @@ builder.Services.AddSwaggerGen(options =>
 // Configure EF Core with PostgreSQL
 builder.Services.AddDbContext<LeaveTrackDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Configure ASP.NET Core Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
+    .AddEntityFrameworkStores<LeaveTrackDbContext>()
+    .AddDefaultTokenProviders();
 
 // Configure JWT Authentication
 var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "SuperSecretJWTKeyThatIsAtLeast32CharactersLong!";

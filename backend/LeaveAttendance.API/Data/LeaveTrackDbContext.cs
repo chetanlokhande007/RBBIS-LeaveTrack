@@ -1,17 +1,17 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using LeaveAttendance.API.Models;
 using System;
 
 namespace LeaveAttendance.API.Data
 {
-    public class LeaveTrackDbContext : DbContext
+    public class LeaveTrackDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
         public LeaveTrackDbContext(DbContextOptions<LeaveTrackDbContext> options) : base(options)
         {
         }
 
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<LeaveType> LeaveTypes { get; set; }
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
@@ -24,19 +24,16 @@ namespace LeaveAttendance.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // User configuration
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasIndex(u => u.Username).IsUnique();
-                
-                entity.HasOne(u => u.Role)
-                    .WithMany()
-                    .HasForeignKey(u => u.RoleId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            // Configure identity table names if needed (optional)
+            // modelBuilder.Entity<ApplicationUser>().ToTable("Users");
+            // modelBuilder.Entity<IdentityRole<int>>().ToTable("Roles");
 
+            // ApplicationUser configuration
+            modelBuilder.Entity<ApplicationUser>(entity =>
+            {
                 entity.HasOne(u => u.Employee)
                     .WithOne()
-                    .HasForeignKey<User>(u => u.EmployeeId)
+                    .HasForeignKey<ApplicationUser>(u => u.EmployeeId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -80,15 +77,10 @@ namespace LeaveAttendance.API.Data
             });
 
             // Seeding data
-            // 1. Roles
-            modelBuilder.Entity<Role>().HasData(
-                new Role { Id = 1, Name = "Admin" },
-                new Role { Id = 2, Name = "Manager" },
-                new Role { Id = 3, Name = "Employee" },
-                new Role { Id = 4, Name = "HR" }
-            );
-
-            // 2. Employees (Seed before Users because User.EmployeeId references Employee)
+            // Note: Users and Roles seeding is removed from here and should be handled 
+            // via UserManager/RoleManager on startup, but we keep the Employee seed.
+            
+            // 2. Employees
             modelBuilder.Entity<Employee>().HasData(
                 new Employee 
                 { 
@@ -129,50 +121,6 @@ namespace LeaveAttendance.API.Data
                     Designation = "HR Specialist", 
                     ManagerId = 2, // Sarah Smith is manager
                     DateOfJoining = new DateOnly(2025, 2, 1) 
-                }
-            );
-
-            // 3. Users (Password hashing will run when creating migration/database update)
-            modelBuilder.Entity<User>().HasData(
-                new User 
-                { 
-                    Id = 1, 
-                    Username = "admin", 
-                    RoleId = 1, // Admin
-                    EmployeeId = null, 
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123") 
-                },
-                new User 
-                { 
-                    Id = 2, 
-                    Username = "manager1", 
-                    RoleId = 2, // Manager
-                    EmployeeId = 1, 
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("manager123") 
-                },
-                new User 
-                { 
-                    Id = 3, 
-                    Username = "manager2", 
-                    RoleId = 2, // Manager
-                    EmployeeId = 2, 
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("manager123") 
-                },
-                new User 
-                { 
-                    Id = 4, 
-                    Username = "employee1", 
-                    RoleId = 3, // Employee
-                    EmployeeId = 3, 
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("employee123") 
-                },
-                new User 
-                { 
-                    Id = 5, 
-                    Username = "employee2", 
-                    RoleId = 3, // Employee
-                    EmployeeId = 4, 
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("employee123") 
                 }
             );
 
