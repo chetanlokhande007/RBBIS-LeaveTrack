@@ -22,7 +22,7 @@ namespace LeaveAttendance.API.Controllers
         // POST: api/Auth/login
         // =====================================================
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginDto request)
         {
             try
             {
@@ -42,8 +42,9 @@ namespace LeaveAttendance.API.Controllers
         // REGISTER
         // POST: api/Auth/register
         // =====================================================
+        [AllowAnonymous] // allowing for initial testing based on user flow
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterDto request)
         {
             var response = await _authService.RegisterAsync(request);
             return Ok(response);

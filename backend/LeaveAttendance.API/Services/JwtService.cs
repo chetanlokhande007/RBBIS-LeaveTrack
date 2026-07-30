@@ -17,20 +17,18 @@ namespace LeaveAttendance.API.Services
             _config = config;
         }
 
-        public string GenerateToken(ApplicationUser user, IList<string> roles)
+        public string GenerateToken(ApplicationUser user, string role)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtSecret = _config["Jwt:Secret"] ?? "SuperSecretJWTKeyThatIsAtLeast32CharactersLong!";
             var key = Encoding.ASCII.GetBytes(jwtSecret);
 
-            string roleName = roles.FirstOrDefault() ?? "Employee";
-
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, roleName),
-                new Claim("employeeId", user.EmployeeId?.ToString() ?? "")
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.Email ?? string.Empty),
+                new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+                new Claim(ClaimTypes.Role, role)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor

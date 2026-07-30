@@ -1,158 +1,154 @@
 using LeaveAttendance.API.DTOs;
 using LeaveAttendance.API.Models;
+using LeaveAttendance.API.Data;
 using LeaveAttendance.API.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace LeaveAttendance.API.Services
 {
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly LeaveTrackDbContext _context;
         private readonly IJwtService _jwtService;
         private readonly ILogger<AuthService> _logger;
         private readonly IEmailService _emailService;
 
-        public AuthService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<int>> roleManager, IJwtService jwtService, ILogger<AuthService> logger, IEmailService emailService)
+        public AuthService(
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            LeaveTrackDbContext context,
+            IJwtService jwtService,
+            ILogger<AuthService> logger,
+            IEmailService emailService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _context = context;
             _jwtService = jwtService;
             _logger = logger;
             _emailService = emailService;
         }
 
-        public async Task<AuthResponse> LoginAsync(LoginRequest request)
+        public async Task<AuthResponseDto> LoginAsync(LoginDto request)
         {
-            if (request == null || string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+            if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            {
                 throw new ArgumentException("Invalid client request or missing credentials.");
+            }
 
-            var user = await _userManager.FindByNameAsync(request.Username.Trim());
+            var user = await _userManager.FindByEmailAsync(request.Email.Trim());
 
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
             {
-                throw new UnauthorizedAccessException("Invalid username or password.");
+                throw new UnauthorizedAccessException("Invalid email or password.");
             }
 
             var roles = await _userManager.GetRolesAsync(user);
-            var token = _jwtService.GenerateToken(user, roles);
+            var role = roles.FirstOrDefault() ?? "Employee";
+            
+            var token = _jwtService.GenerateToken(user, role);
 
-            return new AuthResponse
+            return new AuthResponseDto
             {
                 Token = token,
-                Username = user.UserName!,
-                Role = roles.FirstOrDefault() ?? "Employee",
-                EmployeeId = user.EmployeeId,
-                FullName = "User" // We'd need to eagerly load Employee or fetch it from DB, but keeping it simple for now
+                UserId = user.Id,
+                Email = user.Email ?? string.Empty,
+                Role = role
             };
         }
 
-        public async Task<object> RegisterAsync(RegisterRequest request)
+        public async Task<object> RegisterAsync(RegisterDto request)
         {
-            if (request == null || string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
-                throw new ArgumentException("Username and password are required.");
-
-            if (await _userManager.FindByNameAsync(request.Username) != null)
-                throw new InvalidOperationException("Username already exists.");
-
-            // Hardcode default role if RoleId mapping isn't straight-forward, or fetch by RoleId
-            // The prompt says "Assign Default Role (Employee)"
-            string roleName = "Employee";
-            if (request.RoleId == 1) roleName = "Admin";
-            else if (request.RoleId == 2) roleName = "Manager";
-            else if (request.RoleId == 4) roleName = "HR";
-
-            if (!await _roleManager.RoleExistsAsync(roleName))
+            if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
             {
-                await _roleManager.CreateAsync(new IdentityRole<int> { Name = roleName });
+                throw new ArgumentException("Email and password are required.");
             }
 
-            Employee? employee = null;
-            if (request.EmployeeDetails != null)
+            var existingUser = await _userManager.FindByEmailAsync(request.Email.Trim());
+            if (existingUser != null)
             {
-                employee = new Employee
-                {
-                    FullName = request.EmployeeDetails.FullName,
-                    Email = request.EmployeeDetails.Email,
-                    Department = request.EmployeeDetails.Department,
-                    Designation = request.EmployeeDetails.Designation,
-                    ManagerId = request.EmployeeDetails.ManagerId,
-                    DateOfJoining = request.EmployeeDetails.DateOfJoining
-                };
+                throw new InvalidOperationException("Email already exists.");
             }
 
+            // Create ApplicationUser
             var user = new ApplicationUser
             {
-                UserName = request.Username.Trim(),
-                Email = request.EmployeeDetails?.Email,
-                Employee = employee
+                UserName = request.Email.Trim(),
+                Email = request.Email.Trim(),
+                PhoneNumber = request.Phone
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                throw new Exception($"User creation failed: {errors}");
+                throw new InvalidOperationException($"Registration failed: {errors}");
             }
 
+            // Assign Role
+            var roleName = string.IsNullOrWhiteSpace(request.Role) ? "Employee" : request.Role;
+            if (!await _roleManager.RoleExistsAsync(roleName))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(roleName));
+            }
             await _userManager.AddToRoleAsync(user, roleName);
 
-            _logger.LogInformation("User {Username} registered successfully.", user.UserName);
+            // Create Employee Profile
+            var employee = new Employee
+            {
+                UserId = user.Id,
+                FullName = request.Name,
+                Email = request.Email.Trim(),
+                Department = request.Department,
+                DateOfJoining = DateOnly.FromDateTime(DateTime.UtcNow)
+            };
+
+            _context.Employees.Add(employee);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("User {Email} registered successfully.", user.Email);
 
             return new
             {
-                message = "Registration successful",
-                username = user.UserName,
-                employeeId = user.EmployeeId
+                message = "Registration successful"
             };
         }
 
         public async Task<object> ForgotPasswordAsync(ForgotPasswordRequest request)
         {
-            var user = await _userManager.FindByNameAsync(request.Username.Trim());
-            if (user == null) return new { message = "If the username exists, a password reset link has been generated." };
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            return new
-            {
-                message = "If the username exists, a password reset link has been generated.",
-                simulation_token = token 
-            };
+            // Placeholder for now
+            throw new NotImplementedException();
         }
 
         public async Task<object> SendForgotPasswordOtpAsync(SendOtpRequest request)
         {
-            // For simplicity, skip OTP email integration logic in this Identity migration rewrite
-            return new { message = "OTP feature requires custom Identity provider for OTP tokens." };
+            throw new NotImplementedException();
         }
 
         public async Task<object> ResendForgotPasswordOtpAsync(ResendOtpRequest request)
         {
-            return new { message = "OTP feature requires custom Identity provider for OTP tokens." };
+            throw new NotImplementedException();
         }
 
         public async Task<object> VerifyForgotPasswordOtpAsync(VerifyOtpRequest request)
         {
-            return new { message = "OTP verified successfully.", token = request.Otp };
+            throw new NotImplementedException();
         }
 
         public async Task<object> ResetPasswordAsync(ResetPasswordRequest request)
         {
-            // Placeholder: Assume token is standard Identity token
-            return new { message = "Password has been successfully reset." };
+            throw new NotImplementedException();
         }
 
         public async Task<object> ChangePasswordAsync(ChangePasswordRequest request)
         {
-            var user = await _userManager.FindByNameAsync(request.Username.Trim());
-            if (user == null) throw new UnauthorizedAccessException("Invalid username.");
-
-            var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
-            if (!result.Succeeded) throw new Exception("Failed to change password.");
-
-            return new { message = "Password changed successfully." };
+            throw new NotImplementedException();
         }
     }
 }

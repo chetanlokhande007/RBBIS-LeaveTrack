@@ -6,7 +6,7 @@ using System;
 
 namespace LeaveAttendance.API.Data
 {
-    public class LeaveTrackDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
+    public class LeaveTrackDbContext : IdentityDbContext<ApplicationUser>
     {
         public LeaveTrackDbContext(DbContextOptions<LeaveTrackDbContext> options) : base(options)
         {
@@ -24,17 +24,13 @@ namespace LeaveAttendance.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure identity table names if needed (optional)
-            // modelBuilder.Entity<ApplicationUser>().ToTable("Users");
-            // modelBuilder.Entity<IdentityRole<int>>().ToTable("Roles");
-
-            // ApplicationUser configuration
-            modelBuilder.Entity<ApplicationUser>(entity =>
+            // Employee mapping to ApplicationUser
+            modelBuilder.Entity<Employee>(entity =>
             {
-                entity.HasOne(u => u.Employee)
-                    .WithOne()
-                    .HasForeignKey<ApplicationUser>(u => u.EmployeeId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.User)
+                    .WithMany()
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             // Employee self-referencing relationship (Manager)
@@ -77,10 +73,15 @@ namespace LeaveAttendance.API.Data
             });
 
             // Seeding data
-            // Note: Users and Roles seeding is removed from here and should be handled 
-            // via UserManager/RoleManager on startup, but we keep the Employee seed.
-            
-            // 2. Employees
+            // 1. Roles
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
+                new IdentityRole { Id = "2", Name = "Manager", NormalizedName = "MANAGER" },
+                new IdentityRole { Id = "3", Name = "Employee", NormalizedName = "EMPLOYEE" },
+                new IdentityRole { Id = "4", Name = "HR", NormalizedName = "HR" }
+            );
+
+            // 2. Employees (Seed before Users because User.EmployeeId references Employee)
             modelBuilder.Entity<Employee>().HasData(
                 new Employee 
                 { 
@@ -123,6 +124,8 @@ namespace LeaveAttendance.API.Data
                     DateOfJoining = new DateOnly(2025, 2, 1) 
                 }
             );
+
+            // 3. Users seeding removed (we will use UserManager for registration)
 
             // 4. LeaveTypes
             modelBuilder.Entity<LeaveType>().HasData(

@@ -4,8 +4,8 @@ namespace LeaveAttendance.API.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<AuthResponse> LoginAsync(LoginRequest request);
-        Task<object> RegisterAsync(RegisterRequest request);
+        Task<AuthResponseDto> LoginAsync(LoginDto request);
+        Task<object> RegisterAsync(RegisterDto request);
         Task<object> ForgotPasswordAsync(ForgotPasswordRequest request);
         Task<object> ResetPasswordAsync(ResetPasswordRequest request);
         Task<object> ChangePasswordAsync(ChangePasswordRequest request);

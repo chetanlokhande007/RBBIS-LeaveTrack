@@ -12,6 +12,11 @@ namespace LeaveAttendance.API.Models
         public string Department { get; set; } = string.Empty;
         public string Designation { get; set; } = string.Empty;
         
+        // Identity User Mapping
+        public string? UserId { get; set; }
+        [JsonIgnore]
+        public ApplicationUser? User { get; set; }
+
         public int? ManagerId { get; set; }
         
         [JsonIgnore]

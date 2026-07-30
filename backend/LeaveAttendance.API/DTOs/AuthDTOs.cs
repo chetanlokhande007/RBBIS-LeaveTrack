@@ -1,26 +1,27 @@
 namespace LeaveAttendance.API.DTOs
 {
-    public class LoginRequest
+    public class LoginDto
     {
-        public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
     }
 
-    public class RegisterRequest
+    public class RegisterDto
     {
-        public string Username { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public int RoleId { get; set; }
-        public EmployeeCreateUpdateDTO? EmployeeDetails { get; set; }
+        public string Phone { get; set; } = string.Empty;
+        public string Department { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
     }
 
-    public class AuthResponse
+    public class AuthResponseDto
     {
         public string Token { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
+        public string UserId { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
-        public int? EmployeeId { get; set; }
-        public string FullName { get; set; } = string.Empty;
     }
 
     public class ForgotPasswordRequest
