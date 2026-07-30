@@ -102,7 +102,12 @@ export class ApplyLeaveComponent implements OnInit {
       },
       error: (err) => {
         this.submitting = false;
-        const msg = err.error || 'Failed to submit leave request';
+        let msg = 'Failed to submit leave request';
+        if (err.error && err.error.message) {
+          msg = err.error.message;
+        } else if (typeof err.error === 'string') {
+          msg = err.error;
+        }
         this.notification.show(msg, 'error');
       }
     });
