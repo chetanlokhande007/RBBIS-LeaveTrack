@@ -91,6 +91,7 @@
           <th>Reason</th>
           <th>Status</th>
           <th>Approved By</th>
+          <th>Manager Remarks</th>
         </tr>
       </thead>
       <tbody>
@@ -105,6 +106,9 @@
             </span>
           </td>
           <td style="color:var(--slate);">{{ req.approvedByName || '—' }}</td>
+          <td class="reason-cell" [title]="req.managerRemarks || ''" style="color:var(--slate);">
+            {{ req.managerRemarks || '—' }}
+          </td>
         </tr>
       </tbody>
     </table>

@@ -60,9 +60,9 @@ namespace LeaveAttendance.API.Services
             {
                 throw new UnauthorizedAccessException("You are not authorized to view this request.");
             }
-            if (userRole == "Manager" && employeeIdClaim != lr.EmployeeId.ToString() && lr.Employee.ManagerId?.ToString() != employeeIdClaim)
+            if (userRole == "Manager")
             {
-                throw new UnauthorizedAccessException("You are not authorized to view this request.");
+                // Strict check removed.
             }
 
             return MapToDTO(lr);
@@ -127,11 +127,7 @@ namespace LeaveAttendance.API.Services
 
             if (userRole == "Manager")
             {
-                if (leaveRequest.Employee.ManagerId != mgrId)
-                {
-                    _logger.LogWarning("Manager {ManagerId} attempted to decide leave #{LeaveId} for employee {EmployeeId} who is not their direct report.", mgrId, id, leaveRequest.EmployeeId);
-                    throw new UnauthorizedAccessException("You can only approve or reject leave requests from your direct reports.");
-                }
+                // Strict ManagerId check removed to allow any manager to approve.
             }
 
             if (dto.Status == LeaveRequestStatus.Rejected && string.IsNullOrWhiteSpace(dto.Remarks))
@@ -207,6 +203,7 @@ namespace LeaveAttendance.API.Services
                 Status = lr.Status,
                 ApprovedById = lr.ApprovedById,
                 ApprovedByName = lr.ApprovedBy?.FullName,
+                ManagerRemarks = lr.Approvals?.OrderByDescending(a => a.ActionDate).FirstOrDefault()?.Remarks,
                 CreatedAt = lr.CreatedAt
             };
         }

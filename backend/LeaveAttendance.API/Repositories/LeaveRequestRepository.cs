@@ -19,7 +19,8 @@ namespace LeaveAttendance.API.Repositories
             IQueryable<LeaveRequest> query = _context.LeaveRequests
                 .Include(lr => lr.Employee)
                 .Include(lr => lr.LeaveType)
-                .Include(lr => lr.ApprovedBy);
+                .Include(lr => lr.ApprovedBy)
+                .Include(lr => lr.Approvals);
 
             if (userRole == "Employee")
             {
@@ -27,7 +28,8 @@ namespace LeaveAttendance.API.Repositories
             }
             else if (userRole == "Manager")
             {
-                query = query.Where(lr => lr.Employee.ManagerId == empId || lr.EmployeeId == empId);
+                // Removed the strict ManagerId condition so managers can see all leaves.
+                // Or you can optionally filter out their own if desired, but for now they see all.
             }
 
             if (!string.IsNullOrEmpty(status) && Enum.TryParse<LeaveRequestStatus>(status, true, out var parsedStatus))

@@ -34,6 +34,7 @@
           <th>Reason</th>
           <th>Status</th>
           <th>Approved By</th>
+          <th>Manager Remarks</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -49,6 +50,9 @@
             </span>
           </td>
           <td style="color:var(--slate);">{{ req.approvedByName || '—' }}</td>
+          <td class="reason-cell" [title]="req.managerRemarks || ''" style="color:var(--slate);">
+            {{ req.managerRemarks || '—' }}
+          </td>
           <td>
             <button class="btn btn-ghost btn-sm" *ngIf="req.status === 0" (click)="cancelRequest(req.id)">
               Cancel

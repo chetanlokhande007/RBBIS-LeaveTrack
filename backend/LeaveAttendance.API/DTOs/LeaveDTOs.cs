@@ -34,6 +34,7 @@ namespace LeaveAttendance.API.DTOs
         public LeaveRequestStatus Status { get; set; }
         public int? ApprovedById { get; set; }
         public string? ApprovedByName { get; set; }
+        public string? ManagerRemarks { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<LeaveApprovalDTO> Approvals { get; set; } = new List<LeaveApprovalDTO>();
     }
